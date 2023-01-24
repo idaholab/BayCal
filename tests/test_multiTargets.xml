@@ -1,0 +1,173 @@
+<?xml version="1.0" ?>
+<Simulation verbosity="silent">
+  <TestInfo>
+    <name>fgr_bison</name>
+    <author>wangc</author>
+    <created>2020-09-15</created>
+    <classesTested>ExternalModelPluginBase.LikelihoodModel</classesTested>
+    <description>
+      Example for calibrating the fission gas release model of BISON
+    </description>
+  </TestInfo>
+
+  <RunInfo>
+    <WorkingDir>multiTargets</WorkingDir>
+    <Sequence>BayesianInference, print</Sequence>
+    <batchSize>1</batchSize>
+    <internalParallel>False</internalParallel>
+  </RunInfo>
+
+  <Distributions>
+    <Uniform name='alphaDist'>
+      <lowerBound>0.1</lowerBound>
+      <upperBound>0.3</upperBound>
+    </Uniform>
+    <Uniform name='betaDist'>
+      <lowerBound>4</lowerBound>
+      <upperBound>6</upperBound>
+    </Uniform>
+    <Uniform name='gammaDist'>
+      <lowerBound>-1</lowerBound>
+      <upperBound>1</upperBound>
+    </Uniform>
+  </Distributions>
+
+  <Samplers>
+    <AdaptiveMetropolis name="Metropolis">
+      <samplerInit>
+        <limit>20000</limit>
+        <!-- <initialSeed>070419</initialSeed> -->
+        <burnIn>2000</burnIn>
+      </samplerInit>
+      <likelihood log="True">likelihood</likelihood>
+      <variable name="alpha">
+        <distribution>alphaDist</distribution>
+        <initial>0.1</initial>
+      </variable>
+      <variable name="beta">
+        <distribution>betaDist</distribution>
+        <initial>4.0</initial>
+      </variable>
+      <variable name="gamma">
+        <distribution>gammaDist</distribution>
+        <initial>-1.</initial>
+      </variable>
+      <TargetEvaluation class="DataObjects" type="PointSet">outSet</TargetEvaluation>
+    </AdaptiveMetropolis>
+  </Samplers>
+
+  <Steps>
+    <MultiRun name="BayesianInference">
+      <Input class="DataObjects" type="PointSet">inputHolderLikelihood</Input>
+      <Input class="DataObjects" type="PointSet">inputHolderGP</Input>
+      <Model class="Models" type="EnsembleModel">EnsembleLH</Model>
+      <Sampler class="Samplers" type="AdaptiveMetropolis">Metropolis</Sampler>
+      <SolutionExport class="DataObjects" type="PointSet">out_export</SolutionExport>
+      <Output class="DataObjects" type="HistorySet">simData</Output>
+      <Output class="DataObjects" type="DataSet">lhData</Output>
+      <Output class="DataObjects" type="PointSet">outSet</Output>
+    </MultiRun>
+    <IOStep name="print">
+      <Input class="DataObjects" type="PointSet">out_export</Input>
+      <Input class="DataObjects" type="PointSet">outSet</Input>
+      <Output class="OutStreams" type="Print">dumpExport</Output>
+      <Output class="OutStreams" type="Print">dumpOut</Output>
+    </IOStep>
+  </Steps>
+
+  <Models>
+    <ExternalModel ModuleToLoad="model" name="model" subType="">
+      <variables>alpha, beta, gamma, time, eta</variables>
+    </ExternalModel>
+
+    <ExternalModel name="likelihood" subType="BayCal.LikelihoodModel">
+      <variables>likelihood, time, eta</variables>
+      <LikelihoodModel type="normal">
+        <simTargets>eta</simTargets>
+        <expTargets shape="1,50" computeCov='False' correlation='False'>
+          -1.16074224 -1.10303445 -1.02830511 -0.89782965 -0.73765453 -0.7989537
+           -0.86163706 -1.02209944 -1.12444044 -1.23657398 -1.16081758 -1.01219869
+           -0.890747   -0.80444122 -0.70893668 -0.61012531 -0.65670863 -0.6768583
+           -0.74732441 -0.81448647 -0.73232671 -0.54989334 -0.39796749 -0.07894291
+            0.13067378  0.28999998  0.27418965  0.313329    0.32306704  0.2885684
+            0.32736775  0.52458854  0.69446572  0.82419521  1.04393683  1.00435818
+            1.0810376   0.97245373  0.82406522  0.76067559  0.70145544  0.79479965
+            0.88035895  0.97750307  1.11524353  1.17159017  1.18299222  1.07255006
+            1.02835909  0.90784132
+        </expTargets>
+        <expCov diag="True">
+             0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02,
+             0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02,
+             0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02,
+             0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02,
+             0.02, 0.02, 0.02, 0.02, 0.02, 0.02
+        </expCov>
+        <!-- <biasTargets></biasTargets>
+        <biasCov diag="False"></biasCov> -->
+        <!-- <romCov diag="True"></romCov> -->
+      </LikelihoodModel>
+    </ExternalModel>
+    <!-- EnsembleModel -->
+    <EnsembleModel name="EnsembleLH" subType="">
+      <Model class="Models" type="ExternalModel">
+          model
+        <Input class="DataObjects" type="PointSet">inputHolderGP</Input>
+        <TargetEvaluation class="DataObjects" type="HistorySet">simData</TargetEvaluation>
+      </Model>
+      <Model class="Models" type="ExternalModel">
+          likelihood
+        <Input class="DataObjects" type="PointSet">inputHolderLikelihood</Input>
+        <TargetEvaluation class="DataObjects" type="DataSet">lhData</TargetEvaluation>
+      </Model>
+    </EnsembleModel>
+  </Models>
+
+  <OutStreams>
+    <Print name="dumpOut">
+      <type>csv</type>
+      <source>outSet</source>
+      <what>input, output</what>
+    </Print>
+    <Print name="dumpExport">
+      <type>csv</type>
+      <source>out_export</source>
+      <what>input, output</what>
+    </Print>
+  </OutStreams>
+
+  <DataObjects>
+    <PointSet name="inputHolderLikelihood">
+      <Input>eta</Input>
+      <Output>OutputPlaceHolder</Output>
+    </PointSet>
+    <PointSet name="inputHolderGP">
+      <Input>alpha, beta, gamma</Input>
+      <Output>OutputPlaceHolder</Output>
+    </PointSet>
+
+    <PointSet name="outSet">
+      <Input>alpha, beta, gamma</Input>
+      <Output>likelihood</Output>
+    </PointSet>
+
+    <PointSet name="out_export">
+      <Input>traceID</Input>
+      <Output>alpha, beta, gamma</Output>
+    </PointSet>
+
+    <HistorySet name="simData">
+      <!-- calibrated parameters -->
+      <Input>alpha, beta, gamma</Input>
+      <!-- simulation targets that will be passed to likelihood model -->
+      <Output>eta</Output>
+    </HistorySet>
+
+    <DataSet name="lhData">
+      <!-- simulation targets -->
+      <Input>eta</Input>
+      <Output>likelihood</Output>
+      <Index var='time'>eta</Index>
+    </DataSet>
+  </DataObjects>
+
+</Simulation>
