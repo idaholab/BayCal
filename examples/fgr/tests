@@ -1,0 +1,38 @@
+[Tests]
+
+ [./fullGP]
+  type  = 'RavenFramework'
+  input = 'test_external_gp.xml'
+  output = 'fullGP/dumpExport.csv fullGP/dumpOut.csv'
+ [../]
+
+ [./fullGPCov]
+  type  = 'RavenFramework'
+  input = 'test_external_gp_gpCov.xml'
+  output = 'fullGPCov/dumpExport.csv fullGPCov/dumpOut.csv'
+ [../]
+
+ [./reductionGP]
+  type  = 'RavenFramework'
+  input = 'test_external_gp_project_gpCov.xml'
+  output = 'reductionGP/dumpExport.csv reductionGP/dumpOut.csv'
+ [../]
+
+ [./reductionGPBasis]
+  type  = 'RavenFramework'
+  input = 'test_external_gp_projection_with_basis.xml'
+  output = 'reductionGPBasis/dumpExport.csv reductionGPBasis/dumpOut.csv'
+ [../]
+
+ [./reductionGPBasisProposal]
+  type  = 'RavenFramework'
+  input = 'test_external_gp_projection_with_basis_and_proposal.xml'
+  output = 'reductionGPBasisProposal/dumpExport.csv reductionGPBasisProposal/dumpOut.csv'
+ [../]
+
+ [./gp_gpCov]
+  type  = 'RavenFramework'
+  input = 'test_raven_gp.xml'
+  output = 'data/dumpExport.csv data/dumpOut.csv'
+ [../]
+[]
