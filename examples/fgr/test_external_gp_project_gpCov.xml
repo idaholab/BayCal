@@ -1,0 +1,212 @@
+<?xml version="1.0" ?>
+<Simulation verbosity="silent">
+  <TestInfo>
+    <name>fgr_bison</name>
+    <author>wangc</author>
+    <created>2020-09-15</created>
+    <classesTested>ExternalModelPluginBase.LikelihoodModel</classesTested>
+    <description>
+      Example for calibrating the fission gas release model of BISON.
+      External GP model is used. A subspace for BISON responses is constructed using PCA.
+      In this study, a subspace with dim=2 is chosed. The experiment data and corresponding
+      covariance are projected on this subspace. Only the projected values are provided as input
+      to the likelihood model.
+      The GP model is constructed for each projected response. In this case, only two GP models
+      are constructed.
+      In addition, the uncertainty in the GP model is also used in the calibration process.
+      Normal distributions are assumed for temp ~ N(1., 0.025) and grainRadius ~ N(1., 0.3)
+      Lognormal distributions are assumed for the rest of paramters.
+      igDiffCoeff ~ LogNormal(0, 0.5)
+      resolution ~ LogNormal(0, 0.5)
+      gbDiffCoeff ~ LogNormal(0, 0.5)
+    </description>
+  </TestInfo>
+
+  <RunInfo>
+    <WorkingDir>reductionGP</WorkingDir>
+    <Sequence>BayesianInference, print</Sequence>
+    <batchSize>1</batchSize>
+    <internalParallel>False</internalParallel>
+  </RunInfo>
+
+  <Distributions>
+    <Normal name="tempDist">
+      <mean>1.</mean>
+      <sigma>0.025</sigma>
+      <lowerBound>0.95</lowerBound>
+      <upperBound>1.05</upperBound>
+    </Normal>
+    <Normal name="grainRadiusDist">
+      <mean>1.</mean>
+      <sigma>0.3</sigma>
+      <lowerBound>0.4</lowerBound>
+      <upperBound>1.6</upperBound>
+    </Normal>
+    <LogNormal name="uniform">
+      <mean>0.</mean>
+      <sigma>0.5</sigma>
+      <lowerBound>0.1</lowerBound>
+      <upperBound>10.</upperBound>
+    </LogNormal>
+    <!-- <Uniform name='tempDist'>
+      <lowerBound>0.95</lowerBound>
+      <upperBound>1.05</upperBound>
+    </Uniform>
+    <Uniform name='grainRadiusDist'>
+      <lowerBound>0.4</lowerBound>
+      <upperBound>1.6</upperBound>
+    </Uniform> -->
+    <!-- <Uniform name='uniform'>
+      <lowerBound>0.1</lowerBound>
+      <upperBound>10</upperBound>
+    </Uniform> -->
+  </Distributions>
+
+  <Samplers>
+    <AdaptiveMetropolis name="Metropolis">
+      <samplerInit>
+        <limit>1000</limit>
+        <!-- <initialSeed>070419</initialSeed> -->
+        <burnIn>500</burnIn>
+      </samplerInit>
+      <likelihood log="True">likelihood</likelihood>
+      <variable name="temp">
+        <distribution>tempDist</distribution>
+        <initial>1.0</initial>
+      </variable>
+      <variable name="grainRadius">
+        <distribution>grainRadiusDist</distribution>
+        <initial>1.0</initial>
+      </variable>
+      <variable name="igDiffCoeff">
+        <distribution>uniform</distribution>
+        <initial>1.0</initial>
+      </variable>
+      <variable name="resolution">
+        <distribution>uniform</distribution>
+        <initial>1.0</initial>
+      </variable>
+      <variable name="gbDiffCoeff">
+        <distribution>uniform</distribution>
+        <initial>1.0</initial>
+      </variable>
+      <TargetEvaluation class="DataObjects" type="PointSet">outSet</TargetEvaluation>
+    </AdaptiveMetropolis>
+  </Samplers>
+
+  <Steps>
+    <MultiRun name="BayesianInference">
+      <Input class="DataObjects" type="PointSet">inputHolderLikelihood</Input>
+      <Input class="DataObjects" type="PointSet">inputHolderGP</Input>
+      <Model class="Models" type="EnsembleModel">EnsembleLH</Model>
+      <Sampler class="Samplers" type="AdaptiveMetropolis">Metropolis</Sampler>
+      <SolutionExport class="DataObjects" type="PointSet">out_export</SolutionExport>
+      <Output class="DataObjects" type="HistorySet">simData</Output>
+      <Output class="DataObjects" type="DataSet">lhData</Output>
+      <Output class="DataObjects" type="PointSet">outSet</Output>
+    </MultiRun>
+    <IOStep name="print">
+      <Input class="DataObjects" type="PointSet">out_export</Input>
+      <Input class="DataObjects" type="PointSet">outSet</Input>
+      <Output class="OutStreams" type="Print">dumpExport</Output>
+      <Output class="OutStreams" type="Print">dumpOut</Output>
+    </IOStep>
+  </Steps>
+
+  <Models>
+    <ExternalModel ModuleToLoad="../models/projection_gp" name="gpModel" subType="">
+      <variables>temp, grainRadius, igDiffCoeff, resolution, gbDiffCoeff, time, fgr, fgrCov</variables>
+    </ExternalModel>
+
+    <ExternalModel name="likelihood" subType="BayCal.LikelihoodModel">
+      <variables>likelihood, fgr, fgrCov</variables>
+      <LikelihoodModel type="normal">
+        <simTargets>fgr</simTargets>
+        <expTargets shape="1,2" computeCov='False' correlation='False'>
+          -200.00582729  -81.55189534
+        </expTargets>
+        <expCov diag="False">
+          2.09353188 0.93231458
+          0.93231458 1.77514903
+          <!-- 5.46405006 4.00112697
+          4.00112697 4.86901341 -->
+        </expCov>
+        <!-- <biasTargets></biasTargets>
+        <biasCov diag="False"></biasCov> -->
+        <romCov diag="True">fgrCov</romCov>
+      </LikelihoodModel>
+    </ExternalModel>
+    <!-- EnsembleModel -->
+    <EnsembleModel name="EnsembleLH" subType="">
+      <Model class="Models" type="ExternalModel">
+          gpModel
+        <Input class="DataObjects" type="PointSet">inputHolderGP</Input>
+        <TargetEvaluation class="DataObjects" type="HistorySet">simData</TargetEvaluation>
+      </Model>
+      <Model class="Models" type="ExternalModel">
+          likelihood
+        <Input class="DataObjects" type="PointSet">inputHolderLikelihood</Input>
+        <TargetEvaluation class="DataObjects" type="DataSet">lhData</TargetEvaluation>
+      </Model>
+    </EnsembleModel>
+  </Models>
+
+  <OutStreams>
+    <Print name="dumpRom">
+      <type>csv</type>
+      <source>romSampled</source>
+      <what>input, output</what>
+    </Print>
+    <Print name="dumpRomDiff">
+      <type>csv</type>
+      <source>romDiff</source>
+      <what>input, output</what>
+    </Print>
+    <Print name="dumpOut">
+      <type>csv</type>
+      <source>outSet</source>
+      <what>input, output</what>
+    </Print>
+    <Print name="dumpExport">
+      <type>csv</type>
+      <source>out_export</source>
+      <what>input, output</what>
+    </Print>
+  </OutStreams>
+
+  <DataObjects>
+    <PointSet name="inputHolderLikelihood">
+      <Input>fgr, fgrCov</Input>
+      <Output>OutputPlaceHolder</Output>
+    </PointSet>
+    <PointSet name="inputHolderGP">
+      <Input>temp, grainRadius, igDiffCoeff, resolution, gbDiffCoeff</Input>
+      <Output>OutputPlaceHolder</Output>
+    </PointSet>
+
+    <PointSet name="outSet">
+      <Input>temp, grainRadius, igDiffCoeff, resolution, gbDiffCoeff</Input>
+      <Output>likelihood</Output>
+    </PointSet>
+
+    <PointSet name="out_export">
+      <Input>traceID</Input>
+      <Output>temp, grainRadius, igDiffCoeff, resolution, gbDiffCoeff</Output>
+    </PointSet>
+
+    <HistorySet name="simData">
+      <!-- calibrated parameters -->
+      <Input>temp, grainRadius, igDiffCoeff, resolution, gbDiffCoeff</Input>
+      <!-- simulation targets that will be passed to likelihood model -->
+      <Output>time, fgr, fgrCov</Output>
+    </HistorySet>
+
+    <DataSet name="lhData">
+      <!-- simulation targets -->
+      <Input>fgr, fgrCov</Input>
+      <Output>likelihood</Output>
+      <Index var='time'>fgr, fgrCov</Index>
+    </DataSet>
+  </DataObjects>
+
+</Simulation>

@@ -187,9 +187,9 @@ class NormalModel(LikelihoodBase):
       self._expTargets = np.reshape(self._expTargets, (-1,1))
     self._numObservations = self._expTargets.shape[0]
     if self._computeExpCov:
-      if self._expCov:
-        print('"WARNING:" The "expCov" will be computed from the provided data "expTargets", the user provided "expCov" will not be used.' \
-          + 'Try to disable "computeCov" attribute of "expTargets" to use the provided "expCov"!')
+      # if self._expCov:
+        # print('"WARNING:" The "expCov" will be computed from the provided data "expTargets", the user provided "expCov" will not be used.' \
+        #   + 'Try to disable "computeCov" attribute of "expTargets" to use the provided "expCov"!')
       self._expCov = np.cov(self._expTargets.T)
       if self._expCov.size == 1:
         self._expCov = self._expCov.reshape(1,1)

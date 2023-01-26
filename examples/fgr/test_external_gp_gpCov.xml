@@ -1,0 +1,248 @@
+<?xml version="1.0" ?>
+<Simulation verbosity="silent">
+  <TestInfo>
+    <name>fgr_bison</name>
+    <author>wangc</author>
+    <created>2020-09-15</created>
+    <classesTested>ExternalModelPluginBase.LikelihoodModel</classesTested>
+    <description>
+      Example for calibrating the fission gas release model of BISON.
+      External GP model is used, and there is no reduction on the BISON responses.
+      For each response, a GP model is constructed and used to predict the reponse value
+      with new sampled inputs. In addition, the uncertainty in the GP model is also used
+      in the calibration process.
+      Normal distributions are assumed for temp ~ N(1., 0.025) and grainRadius ~ N(1., 0.3)
+      Lognormal distributions are assumed for the rest of paramters.
+      igDiffCoeff ~ LogNormal(0, 0.5)
+      resolution ~ LogNormal(0, 0.5)
+      gbDiffCoeff ~ LogNormal(0, 0.5)
+    </description>
+  </TestInfo>
+
+  <RunInfo>
+    <WorkingDir>fullGPCov</WorkingDir>
+    <Sequence>BayesianInference, print</Sequence>
+    <batchSize>1</batchSize>
+    <internalParallel>False</internalParallel>
+  </RunInfo>
+
+  <Distributions>
+    <Normal name="tempDist">
+      <mean>1.</mean>
+      <sigma>0.025</sigma>
+      <lowerBound>0.95</lowerBound>
+      <upperBound>1.05</upperBound>
+    </Normal>
+    <Normal name="grainRadiusDist">
+      <mean>1.</mean>
+      <sigma>0.3</sigma>
+      <lowerBound>0.4</lowerBound>
+      <upperBound>1.6</upperBound>
+    </Normal>
+    <LogNormal name="uniform">
+      <mean>0.</mean>
+      <sigma>0.5</sigma>
+      <lowerBound>0.1</lowerBound>
+      <upperBound>10.</upperBound>
+    </LogNormal>
+    <!-- <Uniform name='tempDist'>
+      <lowerBound>0.95</lowerBound>
+      <upperBound>1.05</upperBound>
+    </Uniform>
+    <Uniform name='grainRadiusDist'>
+      <lowerBound>0.4</lowerBound>
+      <upperBound>1.6</upperBound>
+    </Uniform> -->
+    <!-- <Uniform name='uniform'>
+      <lowerBound>0.1</lowerBound>
+      <upperBound>10</upperBound>
+    </Uniform> -->
+  </Distributions>
+
+  <Samplers>
+    <AdaptiveMetropolis name="Metropolis">
+      <samplerInit>
+        <limit>1000</limit>
+        <!-- <initialSeed>070419</initialSeed> -->
+        <burnIn>500</burnIn>
+      </samplerInit>
+      <likelihood log="True">likelihood</likelihood>
+      <variable name="temp">
+        <distribution>tempDist</distribution>
+        <initial>1.0</initial>
+      </variable>
+      <variable name="grainRadius">
+        <distribution>grainRadiusDist</distribution>
+        <initial>1.0</initial>
+      </variable>
+      <variable name="igDiffCoeff">
+        <distribution>uniform</distribution>
+        <initial>1.0</initial>
+      </variable>
+      <variable name="resolution">
+        <distribution>uniform</distribution>
+        <initial>1.0</initial>
+      </variable>
+      <variable name="gbDiffCoeff">
+        <distribution>uniform</distribution>
+        <initial>1.0</initial>
+      </variable>
+      <TargetEvaluation class="DataObjects" type="PointSet">outSet</TargetEvaluation>
+    </AdaptiveMetropolis>
+  </Samplers>
+
+  <Steps>
+    <MultiRun name="BayesianInference">
+      <Input class="DataObjects" type="PointSet">inputHolderLikelihood</Input>
+      <Input class="DataObjects" type="PointSet">inputHolderGP</Input>
+      <Model class="Models" type="EnsembleModel">EnsembleLH</Model>
+      <Sampler class="Samplers" type="AdaptiveMetropolis">Metropolis</Sampler>
+      <SolutionExport class="DataObjects" type="PointSet">out_export</SolutionExport>
+      <Output class="DataObjects" type="HistorySet">simData</Output>
+      <Output class="DataObjects" type="DataSet">lhData</Output>
+      <Output class="DataObjects" type="PointSet">outSet</Output>
+    </MultiRun>
+    <IOStep name="print">
+      <Input class="DataObjects" type="PointSet">out_export</Input>
+      <Input class="DataObjects" type="PointSet">outSet</Input>
+      <Output class="OutStreams" type="Print">dumpExport</Output>
+      <Output class="OutStreams" type="Print">dumpOut</Output>
+    </IOStep>
+  </Steps>
+
+  <Models>
+    <ExternalModel ModuleToLoad="../models/full_gp" name="gpModel" subType="">
+      <variables>temp, grainRadius, igDiffCoeff, resolution, gbDiffCoeff, time, fgr, fgrCov</variables>
+    </ExternalModel>
+
+    <ExternalModel name="likelihood" subType="BayCal.LikelihoodModel">
+      <variables>likelihood, fgr, fgrCov</variables>
+      <LikelihoodModel type="normal">
+        <simTargets>fgr</simTargets>
+        <expTargets shape="1,100" computeCov='False' correlation='False'>
+          7.3944  7.1201  6.8458  6.5714  6.3017  6.045   5.7989  5.6574  5.6101
+          5.6044  5.6915  6.0255  6.5665  6.8655  7.078   7.2808  7.514   7.758
+          8.0132  8.2578  8.5252  8.8384  9.1961  9.5679  9.925  10.246  10.521
+          10.779  11.055  11.354  11.65   11.923  12.176  12.432  12.697  12.975
+          13.253  13.516  13.824  14.177  14.538  14.872  15.119  15.276  15.375
+          15.428  15.437  15.437  15.452  15.502  15.614  15.763  15.936  16.116
+          16.317  16.529  16.755  16.987  17.206  17.429  17.643  17.868  18.113
+          18.354  18.572  19.106  21.674  30.567  32.94   33.219  33.279  33.29
+          33.31   33.456  33.59   33.634  33.621  33.65   33.745  33.802  33.88
+          33.975  34.028  34.027  34.059  34.152  34.243  34.267  34.295  34.312
+          34.339  34.418  34.497  34.508  34.54   34.599  34.722  36.039  37.667
+          38.311
+        </expTargets>
+
+        <expCov diag="True">
+          0.73944 0.71201 0.68458 0.65714 0.63017 0.6045  0.57989 0.56574 0.56101
+          0.56044 0.56915 0.60255 0.65665 0.68655 0.7078  0.72808 0.7514  0.7758
+          0.80132 0.82578 0.85252 0.88384 0.91961 0.95679 0.9925  1.0246  1.0521
+          1.0779  1.1055  1.1354  1.165   1.1923  1.2176  1.2432  1.2697  1.2975
+          1.3253  1.3516  1.3824  1.4177  1.4538  1.4872  1.5119  1.5276  1.5375
+          1.5428  1.5437  1.5437  1.5452  1.5502  1.5614  1.5763  1.5936  1.6116
+          1.6317  1.6529  1.6755  1.6987  1.7206  1.7429  1.7643  1.7868  1.8113
+          1.8354  1.8572  1.9106  2.1674  3.0567  3.294   3.3219  3.3279  3.329
+          3.331   3.3456  3.359   3.3634  3.3621  3.365   3.3745  3.3802  3.388
+          3.3975  3.4028  3.4027  3.4059  3.4152  3.4243  3.4267  3.4295  3.4312
+          3.4339  3.4418  3.4497  3.4508  3.454   3.4599  3.4722  3.6039  3.7667
+          3.8311
+          <!-- 0.54677151  0.50695824  0.46864978  0.43183298  0.39711423  0.36542025
+          0.33627241  0.32006175  0.31473222  0.31409299  0.32393172  0.3630665
+          0.43118922  0.4713509   0.50098084  0.53010049  0.56460196  0.60186564
+          0.64211374  0.68191261  0.72679035  0.78117315  0.84568255  0.9154471
+          0.98505625  1.04980516  1.10691441  1.16186841  1.22213025  1.28913316
+          1.357225    1.42157929  1.48254976  1.54554624  1.61213809  1.68350625
+          1.75642009  1.82682256  1.91102976  2.00987329  2.11353444  2.21176384
+          2.28584161  2.33356176  2.36390625  2.38023184  2.38300969  2.38300969
+          2.38764304  2.40312004  2.43796996  2.48472169  2.53956096  2.59725456
+          2.66244489  2.73207841  2.80730025  2.88558169  2.96046436  3.03770041
+          3.11275449  3.19265424  3.28080769  3.36869316  3.44919184  3.65039236
+          4.69762276  9.34341489 10.850436   11.03501961 11.07491841 11.082241
+         11.095561   11.19303936 11.282881   11.31245956 11.30371641 11.323225
+         11.38725025 11.42575204 11.478544   11.54300625 11.57904784 11.57836729
+         11.60015481 11.66359104 11.72583049 11.74227289 11.76147025 11.77313344
+         11.79166921 11.84598724 11.90043009 11.90802064 11.930116   11.97090801
+         12.05617284 12.98809521 14.18802889 14.67732721 -->
+        </expCov>
+
+        <!-- <biasTargets></biasTargets>
+        <biasCov diag="False"></biasCov> -->
+        <romCov diag="True">fgrCov</romCov>
+
+      </LikelihoodModel>
+    </ExternalModel>
+    <!-- EnsembleModel -->
+    <EnsembleModel name="EnsembleLH" subType="">
+      <Model class="Models" type="ExternalModel">
+          gpModel
+        <Input class="DataObjects" type="PointSet">inputHolderGP</Input>
+        <TargetEvaluation class="DataObjects" type="HistorySet">simData</TargetEvaluation>
+      </Model>
+      <Model class="Models" type="ExternalModel">
+          likelihood
+        <Input class="DataObjects" type="PointSet">inputHolderLikelihood</Input>
+        <TargetEvaluation class="DataObjects" type="DataSet">lhData</TargetEvaluation>
+      </Model>
+    </EnsembleModel>
+  </Models>
+
+  <OutStreams>
+    <Print name="dumpRom">
+      <type>csv</type>
+      <source>romSampled</source>
+      <what>input, output</what>
+    </Print>
+    <Print name="dumpRomDiff">
+      <type>csv</type>
+      <source>romDiff</source>
+      <what>input, output</what>
+    </Print>
+    <Print name="dumpOut">
+      <type>csv</type>
+      <source>outSet</source>
+      <what>input, output</what>
+    </Print>
+    <Print name="dumpExport">
+      <type>csv</type>
+      <source>out_export</source>
+      <what>input, output</what>
+    </Print>
+  </OutStreams>
+
+  <DataObjects>
+    <PointSet name="inputHolderLikelihood">
+      <Input>fgr, fgrCov</Input>
+      <Output>OutputPlaceHolder</Output>
+    </PointSet>
+    <PointSet name="inputHolderGP">
+      <Input>temp, grainRadius, igDiffCoeff, resolution, gbDiffCoeff</Input>
+      <Output>OutputPlaceHolder</Output>
+    </PointSet>
+
+    <PointSet name="outSet">
+      <Input>temp, grainRadius, igDiffCoeff, resolution, gbDiffCoeff</Input>
+      <Output>likelihood</Output>
+    </PointSet>
+
+    <PointSet name="out_export">
+      <Input>traceID</Input>
+      <Output>temp, grainRadius, igDiffCoeff, resolution, gbDiffCoeff</Output>
+    </PointSet>
+
+    <HistorySet name="simData">
+      <!-- calibrated parameters -->
+      <Input>temp, grainRadius, igDiffCoeff, resolution, gbDiffCoeff</Input>
+      <!-- simulation targets that will be passed to likelihood model -->
+      <Output>time, fgr, fgrCov</Output>
+    </HistorySet>
+
+    <DataSet name="lhData">
+      <!-- simulation targets -->
+      <Input>fgr, fgrCov</Input>
+      <Output>likelihood</Output>
+      <Index var='time'>fgr, fgrCov</Index>
+    </DataSet>
+  </DataObjects>
+
+</Simulation>

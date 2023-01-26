@@ -1,0 +1,276 @@
+<?xml version="1.0" ?>
+<Simulation verbosity="silent">
+  <TestInfo>
+    <name>fgr_bison</name>
+    <author>wangc</author>
+    <created>2020-09-15</created>
+    <classesTested>ExternalModelPluginBase.LikelihoodModel</classesTested>
+    <description>
+      Example for calibrating the fission gas release model of BISON.
+      External GP model is used. A subspace for BISON responses is constructed using PCA.
+      In this study, instead to project experiment data onto the subspace, we allow the user to
+      input the basis vectors of the subspace directly, and the likelihood model will apply the
+      project onto the experiment data directly. In this case, the GP model is constructed for
+      each projected response. That is, only two GP models are constructed.
+      Different from other tests, this test includes a user provided multivariate normal distribution
+      as proposal distribution. If not provided, RAVEN will automatically calculate the proposal
+      distribution. In both case, an adaptive approach is used to update the proposed distribution to
+      accelerate the convergence of calibration process.
+      Normal distributions are assumed for temp ~ N(1., 0.025) and grainRadius ~ N(1., 0.3)
+      Lognormal distributions are assumed for the rest of paramters.
+      igDiffCoeff ~ LogNormal(0, 0.5)
+      resolution ~ LogNormal(0, 0.5)
+      gbDiffCoeff ~ LogNormal(0, 0.5)
+    </description>
+  </TestInfo>
+
+  <RunInfo>
+    <WorkingDir>reductionGPBasisProposal</WorkingDir>
+    <Sequence>BayesianInference, print</Sequence>
+    <batchSize>1</batchSize>
+    <internalParallel>False</internalParallel>
+  </RunInfo>
+
+  <Distributions>
+    <Uniform name='tempDist'>
+      <lowerBound>0.95</lowerBound>
+      <upperBound>1.05</upperBound>
+    </Uniform>
+    <Uniform name='grainRadiusDist'>
+      <lowerBound>0.4</lowerBound>
+      <upperBound>1.6</upperBound>
+    </Uniform>
+    <Uniform name='uniform'>
+      <lowerBound>0.1</lowerBound>
+      <upperBound>10</upperBound>
+    </Uniform>
+    <MultivariateNormal method="pca" name="mvn">
+      <mu>0 0 0 0 0</mu>
+      <covariance>
+          0.0004 0 0 0 0
+          0 0.0048 0 0 0
+          0 0 4.0 0 0
+          0 0 0 6.25 0
+          0 0 0 0 4.0
+      </covariance>
+    </MultivariateNormal>
+  </Distributions>
+
+  <Samplers>
+    <AdaptiveMetropolis name="Metropolis">
+      <samplerInit>
+        <limit>1000</limit>
+        <!-- <initialSeed>070419</initialSeed> -->
+        <burnIn>500</burnIn>
+      </samplerInit>
+      <likelihood log="True">likelihood</likelihood>
+      <variable name="temp">
+        <distribution>tempDist</distribution>
+        <initial>1.0</initial>
+        <proposal class="Distributions" type="MultivariateNormal" dim="1">mvn</proposal>
+      </variable>
+      <variable name="grainRadius">
+        <distribution>grainRadiusDist</distribution>
+        <initial>0.5</initial>
+        <proposal class="Distributions" type="MultivariateNormal" dim="2">mvn</proposal>
+      </variable>
+      <variable name="igDiffCoeff">
+        <distribution>uniform</distribution>
+        <initial>6.5</initial>
+        <proposal class="Distributions" type="MultivariateNormal" dim="3">mvn</proposal>
+      </variable>
+      <variable name="resolution">
+        <distribution>uniform</distribution>
+        <initial>5.7</initial>
+        <proposal class="Distributions" type="MultivariateNormal" dim="4">mvn</proposal>
+      </variable>
+      <variable name="gbDiffCoeff">
+        <distribution>uniform</distribution>
+        <initial>2.5</initial>
+        <proposal class="Distributions" type="MultivariateNormal" dim="5">mvn</proposal>
+      </variable>
+      <TargetEvaluation class="DataObjects" type="PointSet">outSet</TargetEvaluation>
+    </AdaptiveMetropolis>
+  </Samplers>
+
+  <Steps>
+    <MultiRun name="BayesianInference">
+      <Input class="DataObjects" type="PointSet">inputHolderLikelihood</Input>
+      <Input class="DataObjects" type="PointSet">inputHolderGP</Input>
+      <Model class="Models" type="EnsembleModel">EnsembleLH</Model>
+      <Sampler class="Samplers" type="AdaptiveMetropolis">Metropolis</Sampler>
+      <SolutionExport class="DataObjects" type="PointSet">out_export</SolutionExport>
+      <Output class="DataObjects" type="HistorySet">simData</Output>
+      <Output class="DataObjects" type="DataSet">lhData</Output>
+      <Output class="DataObjects" type="PointSet">outSet</Output>
+    </MultiRun>
+    <IOStep name="print">
+      <Input class="DataObjects" type="PointSet">out_export</Input>
+      <Input class="DataObjects" type="PointSet">outSet</Input>
+      <Output class="OutStreams" type="Print">dumpExport</Output>
+      <Output class="OutStreams" type="Print">dumpOut</Output>
+    </IOStep>
+  </Steps>
+
+  <Models>
+    <ExternalModel ModuleToLoad="gp" name="gpModel" subType="">
+      <variables>temp, grainRadius, igDiffCoeff, resolution, gbDiffCoeff, time,fgr</variables>
+    </ExternalModel>
+
+    <ExternalModel name="likelihood" subType="BayCal.LikelihoodModel">
+      <variables>likelihood, fgr</variables>
+      <LikelihoodModel type="normal">
+        <simTargets>fgr</simTargets>
+        <expTargets shape="1,100" computeCov='False' correlation='False'>
+          7.3944  7.1201  6.8458  6.5714  6.3017  6.045   5.7989  5.6574  5.6101
+          5.6044  5.6915  6.0255  6.5665  6.8655  7.078   7.2808  7.514   7.758
+          8.0132  8.2578  8.5252  8.8384  9.1961  9.5679  9.925  10.246  10.521
+          10.779  11.055  11.354  11.65   11.923  12.176  12.432  12.697  12.975
+          13.253  13.516  13.824  14.177  14.538  14.872  15.119  15.276  15.375
+          15.428  15.437  15.437  15.452  15.502  15.614  15.763  15.936  16.116
+          16.317  16.529  16.755  16.987  17.206  17.429  17.643  17.868  18.113
+          18.354  18.572  19.106  21.674  30.567  32.94   33.219  33.279  33.29
+          33.31   33.456  33.59   33.634  33.621  33.65   33.745  33.802  33.88
+          33.975  34.028  34.027  34.059  34.152  34.243  34.267  34.295  34.312
+          34.339  34.418  34.497  34.508  34.54   34.599  34.722  36.039  37.667
+          38.311
+        </expTargets>
+        <expCov diag="True">
+          0.73944 0.71201 0.68458 0.65714 0.63017 0.6045  0.57989 0.56574 0.56101
+          0.56044 0.56915 0.60255 0.65665 0.68655 0.7078  0.72808 0.7514  0.7758
+          0.80132 0.82578 0.85252 0.88384 0.91961 0.95679 0.9925  1.0246  1.0521
+          1.0779  1.1055  1.1354  1.165   1.1923  1.2176  1.2432  1.2697  1.2975
+          1.3253  1.3516  1.3824  1.4177  1.4538  1.4872  1.5119  1.5276  1.5375
+          1.5428  1.5437  1.5437  1.5452  1.5502  1.5614  1.5763  1.5936  1.6116
+          1.6317  1.6529  1.6755  1.6987  1.7206  1.7429  1.7643  1.7868  1.8113
+          1.8354  1.8572  1.9106  2.1674  3.0567  3.294   3.3219  3.3279  3.329
+          3.331   3.3456  3.359   3.3634  3.3621  3.365   3.3745  3.3802  3.388
+          3.3975  3.4028  3.4027  3.4059  3.4152  3.4243  3.4267  3.4295  3.4312
+          3.4339  3.4418  3.4497  3.4508  3.454   3.4599  3.4722  3.6039  3.7667
+          3.8311
+        </expCov>
+        <!-- -1: no truncation
+             0: optimal rank is computed
+             >1: user-defined truncation rank
+             >0 and < 1: computed rank is the number of the biggest single value needed
+             to reach the energy identified by truncationRank-->
+        <reduction>
+          <basis shape='100,2'>
+             -0.01569639 -0.01569636 -0.01569632 -0.01569614 -0.01569581 -0.01569546
+             -0.01576154 -0.01586696 -0.01597121 -0.0160751  -0.01617648 -0.01690223
+             -0.01917832 -0.02100849 -0.02252667 -0.02389523 -0.025007   -0.02685292
+             -0.02855263 -0.02997131 -0.03138808 -0.03268107 -0.03518256 -0.0379465
+             -0.04013347 -0.04197548 -0.04354434 -0.04511108 -0.0484857  -0.05093963
+             -0.05306315 -0.05473685 -0.05640828 -0.0601784  -0.06327753 -0.06637248
+             -0.06877171 -0.0707055  -0.07457687 -0.07864295 -0.08270354 -0.08566945
+             -0.08824157 -0.09081486 -0.09338293 -0.09594754 -0.09753627 -0.09898706
+             -0.10043629 -0.10188116 -0.10332401 -0.10476431 -0.10620461 -0.10764296
+             -0.10908326 -0.11042109 -0.11122502 -0.11202894 -0.11282756 -0.11362569
+             -0.11442123 -0.11521429 -0.11600735 -0.11679933 -0.11759239 -0.11838437
+             -0.11917743 -0.1299812  -0.13021353 -0.13083656 -0.131176   -0.13158501
+             -0.13201011 -0.13249341 -0.13298665 -0.13347969 -0.13397472 -0.13449341
+             -0.13501184 -0.13553098 -0.13604943 -0.13656827 -0.13708711 -0.13760501
+             -0.13810704 -0.138575   -0.13904034 -0.139506   -0.13997057 -0.14043576
+             -0.14090095 -0.14136551 -0.14182928 -0.14228976 -0.14275087 -0.14321198
+             -0.14367247 -0.15036219 -0.15110232 -0.15125879
+             -0.10727058 -0.10727032 -0.10727003 -0.10726883 -0.10726658 -0.10726427
+             -0.10757301 -0.10806449 -0.10854812 -0.10902936 -0.10949672 -0.112487
+             -0.12074007 -0.12710948 -0.13213361 -0.13662886 -0.14021716 -0.14725487
+             -0.15216053 -0.15500545 -0.15784652 -0.1605374  -0.17041125 -0.17515867
+             -0.17654559 -0.17721728 -0.17731493 -0.17741244 -0.17681813 -0.17473513
+             -0.17261499 -0.17043671 -0.16826138 -0.16152327 -0.15428794 -0.14706238
+             -0.14149984 -0.13704949 -0.1264757  -0.11373094 -0.10100339 -0.09147827
+             -0.08310667 -0.07468035 -0.06615659 -0.05764434 -0.05246749 -0.04776174
+             -0.04298364 -0.03812425 -0.03326989 -0.02832549 -0.02338109 -0.01844337
+             -0.01349897 -0.00896982 -0.00661199 -0.00425417 -0.00182068  0.00064546
+              0.00313634  0.00569671  0.00825708  0.010814    0.01337437  0.01593129
+              0.01849166  0.0409493   0.04117807  0.04264348  0.04331689  0.0441988
+              0.04510669  0.0462899   0.04749171  0.04869556  0.04991677  0.05134448
+              0.05277279  0.05420303  0.05563062  0.05705967  0.05848871  0.05991759
+              0.06128949  0.06258182  0.0638974   0.06522035  0.06655027  0.06788199
+              0.06921372  0.07054364  0.07187938  0.07320348  0.07452936  0.07585525
+              0.07717935  0.08903786  0.08968966  0.08985771
+          </basis>
+        </reduction>
+        <!--
+
+        <biasTargets></biasTargets>
+        <biasCov diag="False"></biasCov>
+        <romCov diag="False"></romCov>
+         -->
+      </LikelihoodModel>
+    </ExternalModel>
+    <!-- EnsembleModel -->
+    <EnsembleModel name="EnsembleLH" subType="">
+      <Model class="Models" type="ExternalModel">
+          gpModel
+        <Input class="DataObjects" type="PointSet">inputHolderGP</Input>
+        <TargetEvaluation class="DataObjects" type="HistorySet">simData</TargetEvaluation>
+      </Model>
+      <Model class="Models" type="ExternalModel">
+          likelihood
+        <Input class="DataObjects" type="PointSet">inputHolderLikelihood</Input>
+        <TargetEvaluation class="DataObjects" type="DataSet">lhData</TargetEvaluation>
+      </Model>
+    </EnsembleModel>
+  </Models>
+
+  <OutStreams>
+    <Print name="dumpRom">
+      <type>csv</type>
+      <source>romSampled</source>
+      <what>input, output</what>
+    </Print>
+    <Print name="dumpRomDiff">
+      <type>csv</type>
+      <source>romDiff</source>
+      <what>input, output</what>
+    </Print>
+    <Print name="dumpOut">
+      <type>csv</type>
+      <source>outSet</source>
+      <what>input, output</what>
+    </Print>
+    <Print name="dumpExport">
+      <type>csv</type>
+      <source>out_export</source>
+      <what>input, output</what>
+    </Print>
+  </OutStreams>
+
+  <DataObjects>
+    <PointSet name="inputHolderLikelihood">
+      <Input>fgr</Input>
+      <Output>OutputPlaceHolder</Output>
+    </PointSet>
+    <PointSet name="inputHolderGP">
+      <Input>temp, grainRadius, igDiffCoeff, resolution, gbDiffCoeff</Input>
+      <Output>OutputPlaceHolder</Output>
+    </PointSet>
+
+    <PointSet name="outSet">
+      <Input>temp, grainRadius, igDiffCoeff, resolution, gbDiffCoeff</Input>
+      <Output>likelihood</Output>
+    </PointSet>
+
+    <PointSet name="out_export">
+      <Input>traceID</Input>
+      <Output>temp, grainRadius, igDiffCoeff, resolution, gbDiffCoeff</Output>
+    </PointSet>
+
+    <HistorySet name="simData">
+      <!-- calibrated parameters -->
+      <Input>temp, grainRadius, igDiffCoeff, resolution, gbDiffCoeff</Input>
+      <!-- simulation targets that will be passed to likelihood model -->
+      <Output>time, fgr</Output>
+    </HistorySet>
+
+    <DataSet name="lhData">
+      <!-- simulation targets -->
+      <Input>fgr</Input>
+      <Output>likelihood</Output>
+      <Index var='time'>fgr</Index>
+    </DataSet>
+  </DataObjects>
+
+</Simulation>
