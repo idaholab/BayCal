@@ -1,0 +1,14 @@
+[Tests]
+
+ [./simple_bayesian]
+  type  = 'RavenFramework'
+  input = 'test_mvn_likelihood_external.xml'
+  output = 'external/dumpExport.csv external/dumpOut.csv'
+ [../]
+
+ [./multiTargets_bayesian]
+  type  = 'RavenFramework'
+  input = 'test_multiTargets.xml'
+  output = 'multiTargets/dumpExport.csv multiTargets/dumpOut.csv'
+ [../]
+[]
