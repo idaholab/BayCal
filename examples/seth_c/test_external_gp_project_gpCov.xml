@@ -111,9 +111,9 @@
   <Samplers>
     <AdaptiveMetropolis name="Metropolis">
       <samplerInit>
-        <limit>3</limit>
+        <limit>30000</limit>
         <!-- <initialSeed>070419</initialSeed> -->
-        <burnIn>1</burnIn>
+        <burnIn>1000</burnIn>
       </samplerInit>
       <likelihood log="True">likelihood</likelihood>
 
