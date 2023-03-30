@@ -1,0 +1,324 @@
+<?xml version="1.0" ?>
+<Simulation verbosity="silent">
+  <TestInfo>
+    <name>bison_toptan</name>
+    <author>wangc</author>
+    <created>2023-03-29</created>
+    <classesTested>ExternalModelPluginBase.LikelihoodModel</classesTested>
+    <description>
+      External GP model is used. A subspace for BISON responses is constructed using PCA.
+      In this study, a subspace with dim=12 is chosed. The experiment data and corresponding
+      covariance are projected on this subspace. Only the projected values are provided as input
+      to the likelihood model.
+      The GP model is constructed for each projected response. In this case, 12 GP models
+      are constructed.
+      In addition, the uncertainty in the GP model is also used in the calibration process.
+    </description>
+  </TestInfo>
+
+  <RunInfo>
+    <WorkingDir>reductionGP</WorkingDir>
+    <Sequence>BayesianInference, print</Sequence>
+    <batchSize>1</batchSize>
+    <internalParallel>False</internalParallel>
+  </RunInfo>
+
+  <Distributions>
+    <Normal name='pcf_scale_dist'>
+        <mean>1.0</mean>
+        <sigma>0.1</sigma>
+        <lowerBound>0.8</lowerBound>
+        <upperBound>1.2</upperBound>
+    </Normal>
+    <Uniform name='k_gap_dist'>
+        <lowerBound>0.1176</lowerBound>
+        <upperBound>0.66</upperBound>
+    </Uniform>
+    <Normal name='fuel_k_dist'>
+        <mean>1.0</mean>
+        <sigma>0.1</sigma>
+        <lowerBound>0.8</lowerBound>
+        <upperBound>1.2</upperBound>
+    </Normal>
+    <Normal name='fuel_cp_dist'>
+        <mean>1.0</mean>
+        <sigma>0.1</sigma>
+        <lowerBound>0.8</lowerBound>
+        <upperBound>1.2</upperBound>
+    </Normal>
+    <Normal name='clad_k_dist'>
+        <mean>1.0</mean>
+        <sigma>0.1</sigma>
+        <lowerBound>0.8</lowerBound>
+        <upperBound>1.2</upperBound>
+    </Normal>
+    <Normal name='clad_cp_dist'>
+        <mean>1.0</mean>
+        <sigma>0.1</sigma>
+        <lowerBound>0.8</lowerBound>
+        <upperBound>1.2</upperBound>
+    </Normal>
+    <Normal name='roughness_fuel_dist'>
+        <mean>2.0e-6</mean>
+        <sigma>2.0e-7</sigma>
+        <lowerBound>1.6e-6</lowerBound>
+        <upperBound>2.4e-6</upperBound>
+    </Normal>
+    <Normal name='roughness_clad_dist'>
+        <mean>1.0e-6</mean>
+        <sigma>1.0e-7</sigma>
+        <lowerBound>0.8e-7</lowerBound>
+        <upperBound>1.2e-6</upperBound>
+    </Normal>
+    <Normal name='roughness_coef_dist'>
+        <mean>0.605</mean>
+        <sigma>0.0605</sigma>
+        <lowerBound>0.484</lowerBound>
+        <upperBound>0.726</upperBound>
+    </Normal>
+    <Normal name='emissivity_primary_dist'>
+        <mean>0.8</mean>
+        <sigma>0.08</sigma>
+        <lowerBound>0.64</lowerBound>
+        <upperBound>0.96</upperBound>
+    </Normal>
+    <Normal name='emissivity_secondary_dist'>
+        <mean>0.325</mean>
+        <sigma>0.0325</sigma>
+        <lowerBound>0.26</lowerBound>
+        <upperBound>0.39</upperBound>
+    </Normal>
+    <Normal name='contact_coef_dist'>
+        <mean>20</mean>
+        <sigma>2</sigma>
+        <lowerBound>16</lowerBound>
+        <upperBound>24</upperBound>
+    </Normal>
+    <Normal name='kennard_coef_dist'>
+        <mean>0.2173</mean>
+        <sigma>0.02173</sigma>
+        <lowerBound>0.17384</lowerBound>
+        <upperBound>0.26076</upperBound>
+    </Normal>
+    <Normal name='gascond_scalef_dist'>
+        <mean>1.0</mean>
+        <sigma>0.1</sigma>
+        <lowerBound>0.8</lowerBound>
+        <upperBound>1.2</upperBound>
+    </Normal>
+  </Distributions>
+
+  <Samplers>
+    <AdaptiveMetropolis name="Metropolis">
+      <samplerInit>
+        <limit>3</limit>
+        <!-- <initialSeed>070419</initialSeed> -->
+        <burnIn>1</burnIn>
+      </samplerInit>
+      <likelihood log="True">likelihood</likelihood>
+
+      <variable name='pcf_scale'>
+        <distribution>pcf_scale_dist</distribution>
+        <initial>1.0</initial>
+      </variable>
+      <variable name='fuel_k_scale'>
+        <distribution>fuel_k_dist</distribution>
+        <initial>1.0</initial>
+      </variable>
+      <variable name='fuel_cp_scale'>
+        <distribution>fuel_cp_dist</distribution>
+        <initial>1.0</initial>
+      </variable>
+      <variable name='clad_k_scale'>
+        <distribution>clad_k_dist</distribution>
+        <initial>1.0</initial>
+      </variable>
+      <variable name='clad_cp_scale'>
+        <distribution>clad_cp_dist</distribution>
+        <initial>1.0</initial>
+      </variable>
+      <variable name='fuel_roughness'>
+        <distribution>roughness_fuel_dist</distribution>
+        <initial>2.0e-6</initial>
+      </variable>
+      <variable name='clad_roughness'>
+        <distribution>roughness_clad_dist</distribution>
+        <initial>1.0e-6</initial>
+      </variable>
+      <variable name='emissivity_primary'>
+        <distribution>emissivity_primary_dist</distribution>
+        <initial>0.8</initial>
+      </variable>
+      <variable name='emissivity_secondary'>
+        <distribution>emissivity_secondary_dist</distribution>
+        <initial>0.325</initial>
+      </variable>
+      <variable name='contact_coef'>
+        <distribution>contact_coef_dist</distribution>
+        <initial>20</initial>
+      </variable>
+      <variable name='gap_cond'>
+        <distribution>gascond_scalef_dist</distribution>
+        <initial>1.0</initial>
+      </variable>
+      <variable name='kennard_coef'>
+        <distribution>kennard_coef_dist</distribution>
+        <initial>0.2173</initial>
+      </variable>
+      <TargetEvaluation class="DataObjects" type="PointSet">outSet</TargetEvaluation>
+    </AdaptiveMetropolis>
+  </Samplers>
+
+  <Steps>
+    <MultiRun name="BayesianInference">
+      <Input class="DataObjects" type="PointSet">inputHolderLikelihood</Input>
+      <Input class="DataObjects" type="PointSet">inputHolderGP</Input>
+      <Model class="Models" type="EnsembleModel">EnsembleLH</Model>
+      <Sampler class="Samplers" type="AdaptiveMetropolis">Metropolis</Sampler>
+      <SolutionExport class="DataObjects" type="PointSet">out_export</SolutionExport>
+      <Output class="DataObjects" type="HistorySet">simData</Output>
+      <Output class="DataObjects" type="DataSet">lhData</Output>
+      <Output class="DataObjects" type="PointSet">outSet</Output>
+    </MultiRun>
+    <IOStep name="print">
+      <Input class="DataObjects" type="PointSet">out_export</Input>
+      <Input class="DataObjects" type="PointSet">outSet</Input>
+      <Output class="OutStreams" type="Print">dumpExport</Output>
+      <Output class="OutStreams" type="Print">dumpOut</Output>
+    </IOStep>
+  </Steps>
+
+  <Models>
+    <ExternalModel ModuleToLoad="gp_pickle" name="gpModel" subType="">
+      <variables>
+        pcf_scale, fuel_k_scale, fuel_cp_scale, clad_k_scale, clad_cp_scale,
+        fuel_roughness, clad_roughness, emissivity_primary, emissivity_secondary,
+        contact_coef, gap_cond, kennard_coef, time, clad_temp_OD, clad_temp_OD_cov</variables>
+    </ExternalModel>
+
+    <ExternalModel name="likelihood" subType="BayCal.LikelihoodModel">
+      <variables>likelihood, clad_temp_OD, clad_temp_OD_cov</variables>
+      <LikelihoodModel type="normal">
+        <simTargets>clad_temp_OD</simTargets>
+        <expTargets shape="1, 12" computeCov='False' correlation='False'>
+          -72110.0040808    9053.72249445   3725.82898842  -1078.01737051
+          2266.44429764   1205.06772042   -429.43836294    445.58607531
+          -218.81153048   -123.8145838     418.49283348   -156.68456136
+        </expTargets>
+        <expCov diag="False">
+          9.40047455e+02 -1.23101430e+02  8.38463382e+01  3.00568460e+01
+          -4.16175257e+00  2.17393664e+00  3.86938896e-01  6.26647414e+00
+           2.59562415e+00  1.84510984e+01 -1.41644013e+01  9.42345010e+00
+          -1.23101430e+02  7.19107380e+02  6.84597268e+01 -9.36867062e+01
+           3.16020015e+01  9.81900898e+01  8.41859583e+00  6.16025642e+01
+           1.50630823e+01  6.83706916e+01 -2.68963221e+01  1.88718036e+01
+           8.38463382e+01  6.84597268e+01  6.66683948e+02  4.87621955e+01
+          -2.33857811e+01  8.28670118e+00  8.73824740e+00  2.25586628e+01
+           5.39608287e+00  1.00806900e+02 -1.23364667e+02  3.59273289e+01
+           3.00568460e+01 -9.36867062e+01  4.87621955e+01  6.00151154e+02
+          -5.66235739e+00 -8.47861927e+01  3.91257400e+01 -1.83115012e+01
+           1.41348290e+01  2.52058371e+01 -6.26633571e+01  1.48337396e+01
+          -4.16175257e+00  3.16020015e+01 -2.33857811e+01 -5.66235739e+00
+           5.03138239e+02 -6.63277332e+01 -1.40020667e+01 -6.02477340e+00
+           1.07184456e-01  8.34073888e+00 -8.81776832e+00  5.54219010e+00
+           2.17393664e+00  9.81900898e+01  8.28670118e+00 -8.47861927e+01
+          -6.63277332e+01  6.26633924e+02  6.73912606e+01  4.25440774e+01
+          -1.75589279e+00 -3.73515550e+00  3.56797111e+01  3.89080502e+00
+           3.86938896e-01  8.41859583e+00  8.73824740e+00  3.91257400e+01
+          -1.40020667e+01  6.73912606e+01  5.73480582e+02  9.31428857e+01
+           3.04361387e+01 -7.26940407e+00  2.69968839e+01 -1.07236671e+01
+           6.26647414e+00  6.16025642e+01  2.25586628e+01 -1.83115012e+01
+          -6.02477340e+00  4.25440774e+01  9.31428857e+01  5.86267533e+02
+           9.38263852e+01  3.07222425e+01  1.57846277e+01  1.61004631e+01
+           2.59562415e+00  1.50630823e+01  5.39608287e+00  1.41348290e+01
+           1.07184456e-01 -1.75589279e+00  3.04361387e+01  9.38263852e+01
+           5.92437872e+02  7.50278355e+01  8.25116002e+01 -2.93094445e+01
+           1.84510984e+01  6.83706916e+01  1.00806900e+02  2.52058371e+01
+           8.34073888e+00 -3.73515550e+00 -7.26940407e+00  3.07222425e+01
+           7.50278355e+01  6.67014153e+02 -4.83795867e+01  4.92464887e+01
+          -1.41644013e+01 -2.68963221e+01 -1.23364667e+02 -6.26633571e+01
+          -8.81776832e+00  3.56797111e+01  2.69968839e+01  1.57846277e+01
+           8.25116002e+01 -4.83795867e+01  6.89431652e+02 -1.03787346e+02
+           9.42345010e+00  1.88718036e+01  3.59273289e+01  1.48337396e+01
+           5.54219010e+00  3.89080502e+00 -1.07236671e+01  1.61004631e+01
+          -2.93094445e+01  4.92464887e+01 -1.03787346e+02  6.47230267e+02
+        </expCov>
+        <!-- <biasTargets></biasTargets>
+        <biasCov diag="False"></biasCov> -->
+        <romCov diag="True">clad_temp_OD_cov</romCov>
+      </LikelihoodModel>
+    </ExternalModel>
+    <!-- EnsembleModel -->
+    <EnsembleModel name="EnsembleLH" subType="">
+      <Model class="Models" type="ExternalModel">
+          gpModel
+        <Input class="DataObjects" type="PointSet">inputHolderGP</Input>
+        <TargetEvaluation class="DataObjects" type="HistorySet">simData</TargetEvaluation>
+      </Model>
+      <Model class="Models" type="ExternalModel">
+          likelihood
+        <Input class="DataObjects" type="PointSet">inputHolderLikelihood</Input>
+        <TargetEvaluation class="DataObjects" type="DataSet">lhData</TargetEvaluation>
+      </Model>
+    </EnsembleModel>
+  </Models>
+
+  <OutStreams>
+    <Print name="dumpRom">
+      <type>csv</type>
+      <source>romSampled</source>
+      <what>input, output</what>
+    </Print>
+    <Print name="dumpRomDiff">
+      <type>csv</type>
+      <source>romDiff</source>
+      <what>input, output</what>
+    </Print>
+    <Print name="dumpOut">
+      <type>csv</type>
+      <source>outSet</source>
+      <what>input, output</what>
+    </Print>
+    <Print name="dumpExport">
+      <type>csv</type>
+      <source>out_export</source>
+      <what>input, output</what>
+    </Print>
+  </OutStreams>
+
+  <DataObjects>
+    <PointSet name="inputHolderLikelihood">
+      <Input>clad_temp_OD, clad_temp_OD_cov</Input>
+      <Output>OutputPlaceHolder</Output>
+    </PointSet>
+    <PointSet name="inputHolderGP">
+      <Input>pcf_scale, fuel_k_scale, fuel_cp_scale, clad_k_scale, clad_cp_scale, fuel_roughness, clad_roughness, emissivity_primary, emissivity_secondary, contact_coef, gap_cond, kennard_coef</Input>
+      <Output>OutputPlaceHolder</Output>
+    </PointSet>
+
+    <PointSet name="outSet">
+      <Input>pcf_scale, fuel_k_scale, fuel_cp_scale, clad_k_scale, clad_cp_scale, fuel_roughness, clad_roughness, emissivity_primary, emissivity_secondary, contact_coef, gap_cond, kennard_coef</Input>
+      <Output>likelihood</Output>
+    </PointSet>
+
+    <PointSet name="out_export">
+      <Input>traceID</Input>
+      <Output>pcf_scale, fuel_k_scale, fuel_cp_scale, clad_k_scale, clad_cp_scale, fuel_roughness, clad_roughness, emissivity_primary, emissivity_secondary, contact_coef, gap_cond, kennard_coef</Output>
+    </PointSet>
+
+    <HistorySet name="simData">
+      <!-- calibrated parameters -->
+      <Input>pcf_scale, fuel_k_scale, fuel_cp_scale, clad_k_scale, clad_cp_scale, fuel_roughness, clad_roughness, emissivity_primary, emissivity_secondary, contact_coef, gap_cond, kennard_coef</Input>
+      <!-- simulation targets that will be passed to likelihood model -->
+      <Output>time, clad_temp_OD, clad_temp_OD_cov</Output>
+    </HistorySet>
+
+    <DataSet name="lhData">
+      <!-- simulation targets -->
+      <Input>clad_temp_OD, clad_temp_OD_cov</Input>
+      <Output>likelihood</Output>
+      <Index var='time'>clad_temp_OD, clad_temp_OD_cov</Index>
+    </DataSet>
+  </DataObjects>
+
+</Simulation>
