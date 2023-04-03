@@ -1,0 +1,92 @@
+<?xml version="1.0" ?>
+<Simulation verbosity='debug'>
+  <RunInfo>
+    <WorkingDir>./</WorkingDir>
+    <Sequence>seth_c_toptan_trunc_normal_data,temps</Sequence>
+    <batchSize>150</batchSize>
+    <NumThreads>5</NumThreads>
+    <expectedTime>26:00:00</expectedTime>
+    <clusterParameters>-P treat</clusterParameters>
+    <mode>
+      mpi
+      <runQSUB/>
+    </mode>
+    <NumMPI>2</NumMPI>
+  </RunInfo>
+
+  <Steps>
+    <MultiRun name="seth_c_toptan_trunc_normal_data">
+      <Input class='Files' type=''>input.i</Input>
+      <Input class='Files' type='Generic'>reactor_power_condensed.csv</Input>
+      <Input class='Files' type='Generic'>relap_timesteps.csv</Input>
+      <Model class='Models' type='Code'>BISON</Model>
+      <Sampler class='Samplers' type='CustomSampler'>custom_sampler</Sampler>
+      <Output class='DataObjects' type='HistorySet'>results</Output>
+    </MultiRun>
+    <IOStep name='temps'>
+      <Input class='DataObjects' type='HistorySet'>results</Input>
+      <Output class='OutStreams' type='Print'>temp_trace</Output>
+    </IOStep>
+  </Steps>
+
+  <Files>
+    <Input name='input.i' type=''>input.i</Input>
+    <Input name='reactor_power_condensed.csv' type='Generic'>reactor_power_condensed.csv</Input>
+    <Input name='relap_timesteps.csv' type='Generic'>relap_timesteps.csv</Input>
+    <Input name='bison_toptan_gap_raven_sampler_values.csv' type='Generic'>bison_toptan_gap_raven_sampler_values.csv</Input>
+  </Files>
+
+  <Models>
+    <Code name='BISON' subType='MooseBasedApp'>
+      <executable>~/projects/Scaling_VV_LDRD/SETH/BISON/C/Toptan_gap_model/bison_run.sh</executable>
+    </Code>
+  </Models>
+
+  <Samplers>
+    <CustomSampler name='custom_sampler'>
+      <Source class='Files' type=''>bison_toptan_gap_raven_sampler_values.csv</Source>
+      <variable name='Functions|rod_specific_power|scale_factor'/>
+      <variable name='Materials|fuel_thermal|thermal_conductivity_scale_factor'/>
+      <variable name='Materials|fuel_thermal|specific_heat_scale_factor'/>
+      <variable name='Materials|clad_thermal|thermal_conductivity_scale_factor'/>
+      <variable name='Materials|clad_thermal|specific_heat_scale_factor'/>
+      <variable name='ThermalContact|thermal_contact|roughness_fuel'/>
+      <variable name='ThermalContact|thermal_contact|roughness_clad'/>
+      <variable name='ThermalContact|thermal_contact|emissivity_primary'/>
+      <variable name='ThermalContact|thermal_contact|emissivity_secondary'/>
+      <variable name='ThermalContact|thermal_contact|contact_coef'/>
+      <variable name='ThermalContact|thermal_contact|gascond_scalef'/>
+      <variable name='ThermalContact|thermal_contact|kennard_coefficient'/>
+    </CustomSampler>
+  </Samplers>
+
+  <DataObjects>
+    <HistorySet name="results">
+      <Input>Functions|rod_specific_power|scale_factor,
+             Materials|fuel_thermal|thermal_conductivity_scale_factor,
+             Materials|fuel_thermal|specific_heat_scale_factor,
+             Materials|clad_thermal|thermal_conductivity_scale_factor,
+             Materials|clad_thermal|specific_heat_scale_factor,
+             ThermalContact|thermal_contact|roughness_fuel,
+             ThermalContact|thermal_contact|roughness_clad,
+             ThermalContact|thermal_contact|emissivity_primary,
+             ThermalContact|thermal_contact|emissivity_secondary,
+             ThermalContact|thermal_contact|contact_coef,
+             ThermalContact|thermal_contact|gascond_scalef,
+             ThermalContact|thermal_contact|kennard_coefficient
+      </Input>
+      <Output>fuel_temp_centerline,fuel_temp_surface,clad_temp_ID,clad_temp_OD</Output>
+      <options>
+        <pivotParameter>time</pivotParameter>
+      </options>
+    </HistorySet>
+  </DataObjects>
+
+  <OutStreams>
+    <Print name='temp_trace'>
+      <type>csv</type>
+      <source>results</source>
+    </Print>
+  </OutStreams>
+
+</Simulation>

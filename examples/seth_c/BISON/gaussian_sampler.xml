@@ -1,0 +1,206 @@
+<?xml version="1.0" ?>
+<Simulation verbosity='debug'>
+  <RunInfo>
+    <WorkingDir>./</WorkingDir>
+    <Sequence>generate_data,print</Sequence>
+  </RunInfo>
+
+  <Steps>
+    <MultiRun name="generate_data">
+      <Input class='DataObjects' type='PointSet'>dummyIN</Input>
+      <Model class='Models' type='Dummy'>gap_conductance_model_values</Model>
+      <Sampler class='Samplers' type='MonteCarlo'>mc_sampler</Sampler>
+      <Output class='DataObjects' type='PointSet'>results</Output>
+    </MultiRun>
+    <IOStep name='print'>
+      <Input class='DataObjects' type='PointSet'>results</Input>
+      <Output class='OutStreams' type='Print'>gaussian_sampled_values</Output>
+    </IOStep>
+
+  </Steps>
+
+  <Models>
+    <Dummy name='gap_conductance_model_values' subType=''></Dummy>
+  </Models>
+
+  <Samplers>
+    <MonteCarlo name="mc_sampler">
+      <samplerInit>
+        <limit>1</limit>
+      </samplerInit>
+      <variable name='Functions|rod_specific_power|scale_factor'>
+        <distribution>pcf_scale_dist</distribution>
+      </variable>
+      <variable name='ThermalContact|thermal_contact|gap_conductivity'>
+        <distribution>k_gap_dist</distribution>
+      </variable>
+      <variable name='Materials|fuel_thermal|thermal_conductivity_scale_factor'>
+        <distribution>fuel_k_dist</distribution>
+      </variable>
+      <variable name='Materials|fuel_thermal|specific_heat_scale_factor'>
+        <distribution>fuel_cp_dist</distribution>
+      </variable>
+      <variable name='Materials|clad_thermal|thermal_conductivity_scale_factor'>
+        <distribution>clad_k_dist</distribution>
+      </variable>
+      <variable name='Materials|clad_thermal|specific_heat_scale_factor'>
+        <distribution>clad_cp_dist</distribution>
+      </variable>
+      <variable name='ThermalContact|thermal_contact|roughness_fuel'>
+        <distribution>roughness_fuel_dist</distribution>
+      </variable>
+      <variable name='ThermalContact|thermal_contact|roughness_clad'>
+        <distribution>roughness_clad_dist</distribution>
+      </variable>
+      <variable name='ThermalContact|thermal_contact|roughness_coef'>
+        <distribution>roughness_coef_dist</distribution>
+      </variable>
+      <variable name='ThermalContact|thermal_contact|emissivity_primary'>
+        <distribution>emissivity_primary_dist</distribution>
+      </variable>
+      <variable name='ThermalContact|thermal_contact|emissivity_secondary'>
+        <distribution>emissivity_secondary_dist</distribution>
+      </variable>
+      <variable name='ThermalContact|thermal_contact|contact_coef'>
+        <distribution>contact_coef_dist</distribution>
+      </variable>
+      <variable name='ThermalContact|thermal_contact|gascond_scalef'>
+        <distribution>gascond_scalef_dist</distribution>
+      </variable>
+      <variable name='ThermalContact|thermal_contact|kennard_coefficient'>
+        <distribution>kennard_coef_dist</distribution>
+      </variable>
+    </MonteCarlo>
+  </Samplers>
+
+  <Distributions>
+    <Normal name='pcf_scale_dist'>
+        <mean>1.0</mean>
+        <sigma>0.1</sigma>
+        <lowerBound>0.8</lowerBound>
+        <upperBound>1.2</upperBound>
+    </Normal>
+    <Uniform name='k_gap_dist'>
+        <lowerBound>0.1176</lowerBound>
+        <upperBound>0.66</upperBound>
+    </Uniform>
+    <Normal name='fuel_k_dist'>
+        <mean>1.0</mean>
+        <sigma>0.1</sigma>
+        <lowerBound>0.8</lowerBound>
+        <upperBound>1.2</upperBound>
+    </Normal>
+    <Normal name='fuel_cp_dist'>
+        <mean>1.0</mean>
+        <sigma>0.1</sigma>
+        <lowerBound>0.8</lowerBound>
+        <upperBound>1.2</upperBound>
+    </Normal>
+    <Normal name='clad_k_dist'>
+        <mean>1.0</mean>
+        <sigma>0.1</sigma>
+        <lowerBound>0.8</lowerBound>
+        <upperBound>1.2</upperBound>
+    </Normal>
+    <Normal name='clad_cp_dist'>
+        <mean>1.0</mean>
+        <sigma>0.1</sigma>
+        <lowerBound>0.8</lowerBound>
+        <upperBound>1.2</upperBound>
+    </Normal>
+    <Normal name='roughness_fuel_dist'>
+        <mean>2.0e-6</mean>
+        <sigma>2.0e-7</sigma>
+        <lowerBound>1.6e-6</lowerBound>
+        <upperBound>2.4e-6</upperBound>
+    </Normal>
+    <Normal name='roughness_clad_dist'>
+        <mean>1.0e-6</mean>
+        <sigma>1.0e-7</sigma>
+        <lowerBound>0.8e-7</lowerBound>
+        <upperBound>1.2e-6</upperBound>
+    </Normal>
+    <Normal name='roughness_coef_dist'>
+        <mean>0.605</mean>
+        <sigma>0.0605</sigma>
+        <lowerBound>0.484</lowerBound>
+        <upperBound>0.726</upperBound>
+    </Normal>
+    <Normal name='emissivity_primary_dist'>
+        <mean>0.8</mean>
+        <sigma>0.08</sigma>
+        <lowerBound>0.64</lowerBound>
+        <upperBound>0.96</upperBound>
+    </Normal>
+    <Normal name='emissivity_secondary_dist'>
+        <mean>0.325</mean>
+        <sigma>0.0325</sigma>
+        <lowerBound>0.26</lowerBound>
+        <upperBound>0.39</upperBound>
+    </Normal>
+    <Normal name='contact_coef_dist'>
+        <mean>20</mean>
+        <sigma>2</sigma>
+        <lowerBound>16</lowerBound>
+        <upperBound>24</upperBound>
+    </Normal>
+    <Normal name='kennard_coef_dist'>
+        <mean>0.2173</mean>
+        <sigma>0.02173</sigma>
+        <lowerBound>0.17384</lowerBound>
+        <upperBound>0.26076</upperBound>
+    </Normal>
+    <Normal name='gascond_scalef_dist'>
+        <mean>1.0</mean>
+        <sigma>0.1</sigma>
+        <lowerBound>0.8</lowerBound>
+        <upperBound>1.2</upperBound>
+    </Normal>
+  </Distributions>
+
+  <DataObjects>
+    <PointSet name="dummyIN">
+      <Input>Functions|rod_specific_power|scale_factor,
+             ThermalContact|thermal_contact|gap_conductivity,
+             Materials|fuel_thermal|thermal_conductivity_scale_factor,
+             Materials|fuel_thermal|specific_heat_scale_factor,
+             Materials|clad_thermal|thermal_conductivity_scale_factor,
+             Materials|clad_thermal|specific_heat_scale_factor,
+             ThermalContact|thermal_contact|roughness_fuel,
+             ThermalContact|thermal_contact|roughness_clad,
+             ThermalContact|thermal_contact|roughness_coef,
+             ThermalContact|thermal_contact|emissivity_primary,
+             ThermalContact|thermal_contact|emissivity_secondary,
+             ThermalContact|thermal_contact|contact_coef,
+             ThermalContact|thermal_contact|gascond_scalef,
+             ThermalContact|thermal_contact|kennard_coefficient
+      </Input>
+      <Output>OutputPlaceHolder</Output>
+    </PointSet>
+    <PointSet name='results'>
+      <Input>Functions|rod_specific_power|scale_factor,
+             ThermalContact|thermal_contact|gap_conductivity,
+             Materials|fuel_thermal|thermal_conductivity_scale_factor,
+             Materials|fuel_thermal|specific_heat_scale_factor,
+             Materials|clad_thermal|thermal_conductivity_scale_factor,
+             Materials|clad_thermal|specific_heat_scale_factor,
+             ThermalContact|thermal_contact|roughness_fuel,
+             ThermalContact|thermal_contact|roughness_clad,
+             ThermalContact|thermal_contact|roughness_coef,
+             ThermalContact|thermal_contact|emissivity_primary,
+             ThermalContact|thermal_contact|emissivity_secondary,
+             ThermalContact|thermal_contact|contact_coef,
+             ThermalContact|thermal_contact|gascond_scalef,
+             ThermalContact|thermal_contact|kennard_coefficient
+      </Input>
+    </PointSet>
+  </DataObjects>
+
+  <OutStreams>
+    <Print name='gaussian_sampled_values'>
+      <type>csv</type>
+      <source>results</source>
+    </Print>
+  </OutStreams>
+
+</Simulation>

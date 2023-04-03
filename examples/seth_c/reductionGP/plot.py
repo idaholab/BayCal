@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 ### control
+
 fname = 'dumpExport.csv'
 ### thining of the chain
 interval = 40
