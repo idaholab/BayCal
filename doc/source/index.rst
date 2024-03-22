@@ -11,6 +11,7 @@ Welcome to BayCal's documentation!
    :caption: Contents:
 
    install
+   quickstart
    support
 
 .. toctree::
