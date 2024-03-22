@@ -36,7 +36,8 @@ class LikelihoodModel(ExternalModelPluginBase):
 
   def __init__(self):
     """
-      Constructor
+      Parameters
+      -----------
       @ In, None
       @ Out, None
       """
