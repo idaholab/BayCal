@@ -36,10 +36,9 @@ class LikelihoodModel(ExternalModelPluginBase):
 
   def __init__(self):
     """
-      Parameters
-      -----------
-      @ In, None
-      @ Out, None
+      Constructor
+
+      :returns: None
       """
     ExternalModelPluginBase.__init__(self)
     self.type = self.__class__.__name__
@@ -51,9 +50,11 @@ class LikelihoodModel(ExternalModelPluginBase):
   def _readMoreXML(self, container, xmlNode):
     """
       Method to read the portion of the XML that belongs to this plugin
-      @ In, container, object, self-like object where all the variables can be stored
-      @ In, xmlNode, xml.etree.ElementTree.Element, XML node that needs to be read
-      @ Out, None
+
+      :param container: object, self-like object where all the variables can be stored
+      :param xmlNode: xml.etree.ElementTree.Element, XML node that needs to be read
+
+      :returns: None
     """
     variables = xmlNode.find('variables')
     delimiter = ',' if ',' in variables.text else None
@@ -67,19 +68,23 @@ class LikelihoodModel(ExternalModelPluginBase):
   def initialize(self, container,runInfoDict,inputFiles):
     """
       Method to initialize this plugin
-      @ In, container, object, self-like object where all the variables can be stored
-      @ In, runInfoDict, dict, dictionary containing all the RunInfo parameters (XML node <RunInfo>)
-      @ In, inputFiles, list, list of input files (if any)
-      @ Out, None
+
+      :param container: object, self-like object where all the variables can be stored
+      :param runInfoDict: dict, dictionary containing all the RunInfo parameters (XML node <RunInfo>)
+      :param inputFiles: list, list of input files (if any)
+
+      :returns: None
     """
     pass
 
   def run(self, container, inputDict):
     """
       This is a simple example of the run method in a plugin.
-      @ In, container, object, self-like object where all the variables can be stored
-      @ In, inputDict, dict, dictionary of inputs from RAVEN
-      @ Out, None
+
+      :param container: object, self-like object where all the variables can be stored
+      :param inputDict: dict, dictionary of inputs from RAVEN
+
+      :returns: None
     """
     self._model.handleInput(self._modelXMLInput)
     self._model.initialize(inputDict)

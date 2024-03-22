@@ -24,8 +24,9 @@ class NormalModel(LikelihoodBase):
   def getInputSpecification(cls):
     """
       Collects input specifications for this class.
-      @ In, None
-      @ Out, inputSpecs, InputData, specs
+
+      returns:
+        InputData: RAVEN InputData specs
     """
     inputSpecs = super(NormalModel, cls).getInputSpecification()
     inputSpecs.description = r"""
@@ -88,10 +89,9 @@ class NormalModel(LikelihoodBase):
 
   def __init__(self):
     """
-      Parameters
-      -----------
-      @ In, None
-      @ Out, None
+      Constructor
+
+      :return: None
     """
     LikelihoodBase.__init__(self)
     self._simTargets = None
@@ -115,9 +115,11 @@ class NormalModel(LikelihoodBase):
   def _localHandleInput(self, paramInput):
     """
       Function to read the portion of the parsed xml input that belongs to this specialized class
-      and initialize some stuff based on the inputs got
-      @ In, paramInput, InputData.ParameterInput, the parsed xml input
-      @ Out, None
+      and initialize some stuff based on the inputs got.
+
+      :param paramInput: InputData.ParameterInput, the parsed xml input
+
+      :returns: None
     """
     LikelihoodBase._localHandleInput(self, paramInput)
     for child in paramInput.subparts:
@@ -174,8 +176,10 @@ class NormalModel(LikelihoodBase):
   def _checkInputParams(self, needDict):
     """
       Method to check input parameters
-      @ In, needDict, dict, dictionary of required parameters
-      @ Out, None
+
+      :param needDict: dict, dictionary of required parameters
+
+      :returns: None
     """
     LikelihoodBase._checkInputParams(self, needDict)
     if self._expTargetsShape:
@@ -244,9 +248,12 @@ class NormalModel(LikelihoodBase):
   @staticmethod
   def isPosDef(arrayIn):
     """
-      Check if provided array is postive definite or not
-      @ In, arrayIn, numpy.array, input array
-      @ Out, isPosDef, bool, True if the array is postive definite
+      Check if provided array is postive definite or not.
+
+      :param arrayIn: numpy.array, input array
+
+      returns:
+        bool: True if the array is postive definite
     """
     try:
       np.linalg.cholesky(arrayIn)
@@ -257,16 +264,18 @@ class NormalModel(LikelihoodBase):
   def initialize(self, inputDict):
     """
       Method to initialize this plugin
-      @ In, inputDict, dict, dictionary of inputs
-      @ Out, None
+
+      :param inputDict: dict, dictionary of inputs
+      :returns: None
     """
     LikelihoodBase.initialize(self, inputDict)
 
   def _logLikelihoodFunction(self):
     """
       Function to calculate log probability
-      @ In, None
-      @ Out, output, dict, likelihood output
+
+      returns:
+        dict: likelihood output
     """
     output = {}
     invCov = None
