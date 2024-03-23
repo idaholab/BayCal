@@ -1,1 +1,6 @@
 sphinx-rtd-theme
+sphinx
+nbsphinx
+sphinx-copybutton
+sphinx-autoapi
+pandoc
