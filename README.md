@@ -7,3 +7,23 @@ BayCal trys to resolve two critical issues existing in the Bayesian inference: 1
 ## Analytic High-Dimensional Problem
 A python analytic problem with 50 responses, three input parameters with uniform prior distributions.
 <img width="1265" alt="image" src="https://github.com/idaholab/BayCal/assets/7321071/209f2a75-def5-488c-a923-7d4ac03cafb8">
+
+
+
+## Applications
+Since BayCal is a plugin for RAVEN, it can be directly applied to the following codes:
+- Generic interface with external codes
+- High-fidelidty simulation codes:
+    - [RELAP5-3D](https://relap53d.inl.gov/SitePages/Home.aspx)
+    - [MELCOR](https://melcor.sandia.gov/about.html)
+    - [MAAP5](https://www.fauske.com/nuclear/maap-modular-accident-analysis-program)
+    - [MOOSE-BASED Apps](https://mooseframework.inl.gov/)
+    - [SCALE](https://www.ornl.gov/onramp/scale-code-system)
+    - [SERPENT](http://montecarlo.vtt.fi/)
+    - [CTF - COBRA TF](https://www.ne.ncsu.edu/rdfmg/cobra-tf/)
+    - [SAPHIRE](https://saphire.inl.gov/)
+    - [MODELICA](https://www.modelica.org/modelicalanguage)
+    - [DYMOLA](https://www.3ds.com/products-services/catia/products/dymola/)
+    - [BISON](https://bison.inl.gov/SitePages/Home.aspx)
+- Custom ad-hoc external models (build in python internally to RAVEN)
+
