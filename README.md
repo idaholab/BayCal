@@ -8,6 +8,13 @@ BayCal trys to resolve two critical issues existing in the Bayesian inference: 1
 A python analytic problem with 50 responses, three input parameters with uniform prior distributions.
 <img width="1265" alt="image" src="https://github.com/idaholab/BayCal/assets/7321071/209f2a75-def5-488c-a923-7d4ac03cafb8">
 
+## Nuclear Fuel Performance Problem 
+In nuclear fuel performance simulation, fission gas release (FGR) involves treatment of several complicated and interrelated physical processes, which depends on uncertaint input parameters. However, the uncertainties associated with these parameters are only known by expert judgement. In this case, Bayesian calibration can be applied to quantify the input uncertainties. In this work, a Gaussian Processing model is applied to greatly reduce the computational cost based on 100 high-fidelity simulations from fuel performance code (i.e., BISON). The FGR time series measurement data is projected to an efficient subspace constructed via Principal Component Analysis. Please refer to [1] for more detailed descriptions. The calculated posterior distributions through BayCal are illustrated in the following:
+
+<img width="1001" alt="image" src="https://github.com/idaholab/BayCal/assets/7321071/8b8eddac-e3b4-40a1-bd08-4e70be2cf281">
+
+<img width="1248" alt="image" src="https://github.com/idaholab/BayCal/assets/7321071/8b8bcf18-29a4-4b06-a3d0-7f7bf15880f1">
+
 
 
 ## Applications
@@ -27,3 +34,9 @@ Since BayCal is a plugin for RAVEN, it can be directly applied to the following 
     - [BISON](https://bison.inl.gov/SitePages/Home.aspx)
 - Custom ad-hoc external models (build in python internally to RAVEN)
 
+
+## References
+```
+1. Wu, Xu, Tomasz Kozlowski, and Hadi Meidani. "Kriging-based inverse uncertainty quantification of nuclear fuel performance code BISON fission gas release model using time series measurement data." Reliability Engineering & System Safety 169 (2018): 422-436.
+2. Xie, Ziyu, Wen Jiang, Congjian Wang, and Xu Wu. "Bayesian inverse uncertainty quantification of a MOOSE-based melt pool model for additive manufacturing using experimental data." Annals of Nuclear Energy 165 (2022): 108782.
+```
