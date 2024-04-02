@@ -57,8 +57,18 @@ class LikelihoodModel(ExternalModelPluginBase):
       :returns: None
     """
     variables = xmlNode.find('variables')
-    delimiter = ',' if ',' in variables.text else None
-    container.variables = [var.strip() for var in variables.text.split(delimiter)]
+    inputVars = xmlNode.find('inputs')
+    outputVars = xmlNode.find('outputs')
+    if variables is not None and (inputVars is not None or outputVars is not None):
+      raise IOError("Botht 'variables' node and 'inputs/outputs' are provided! This is not allowed, please consider just use one of them.")
+    if variables is not None:
+      delimiter = ',' if ',' in variables.text else None
+      container.variables = [var.strip() for var in variables.text.split(delimiter)]
+    elif inputVars is not None and outputVars is not None:
+      delimiter = ',' if ',' in inputVars.text else None
+      container.variables = [var.strip() for var in inputVars.text.split(delimiter)]
+      delimiter = ',' if ',' in outputVars.text else None
+      container.variables.extend([var.strip() for var in outputVars.text.split(delimiter)])
     self._modelXMLInput = xmlNode.find('LikelihoodModel')
     self._modelType = self._modelXMLInput.get('type')
     if self._modelType is None:
