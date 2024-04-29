@@ -6,6 +6,8 @@ BayCal trys to resolve two critical issues existing in the Bayesian inference: 1
 
 ## Installation
 
+https://pypi.org/project/baycal-ravenframework/
+
 ```
 conda create -n baycal_libs python=3.10
 conda activate baycal_libs
