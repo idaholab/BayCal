@@ -12,7 +12,7 @@ import logging
 #External Modules End-----------------------------------------------------------
 
 #Internal Modules---------------------------------------------------------------
-from BayCal.src import LikelihoodModels
+from . import LikelihoodModels
 from ravenframework.utils import mathUtils as utils
 from ravenframework.utils import InputData
 from ravenframework.utils import InputTypes
