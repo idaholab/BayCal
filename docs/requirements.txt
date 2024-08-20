@@ -1,5 +1,5 @@
+sphinxi>=7.4.7
 sphinx-rtd-theme
-sphinx
 nbsphinx
 sphinx-copybutton
 sphinx-autoapi
