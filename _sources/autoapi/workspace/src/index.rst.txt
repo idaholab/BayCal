@@ -1,0 +1,24 @@
+workspace.src
+=============
+
+.. py:module:: workspace.src
+
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/workspace/src/LikelihoodModels/index
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/workspace/src/LikelihoodModel/index
+
+

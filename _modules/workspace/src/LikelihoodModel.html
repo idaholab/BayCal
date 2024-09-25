@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>workspace.src.LikelihoodModel &mdash; BayCal 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=af2ce170"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            BayCal
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../support.html">Support</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">More documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributors.html">Contributors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">BayCal</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">workspace.src.LikelihoodModel</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for workspace.src.LikelihoodModel</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2022 Battelle Energy Alliance, LLC</span>
+<span class="c1"># ALL RIGHTS RESERVED</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Author:  Congjian Wang</span>
+<span class="sd">  Date  :  07/16/2020</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">#External Modules---------------------------------------------------------------</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="c1">#External Modules End-----------------------------------------------------------</span>
+
+<span class="c1">#Internal Modules---------------------------------------------------------------</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">LikelihoodModels</span>
+<span class="kn">from</span> <span class="nn">ravenframework.utils</span> <span class="kn">import</span> <span class="n">mathUtils</span> <span class="k">as</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">ravenframework.utils</span> <span class="kn">import</span> <span class="n">InputData</span>
+<span class="kn">from</span> <span class="nn">ravenframework.utils</span> <span class="kn">import</span> <span class="n">InputTypes</span>
+<span class="kn">from</span> <span class="nn">ravenframework.PluginBaseClasses.ExternalModelPluginBase</span> <span class="kn">import</span> <span class="n">ExternalModelPluginBase</span>
+<span class="c1">#Internal Modules End-----------------------------------------------------------</span>
+
+<span class="c1">## option to use logging</span>
+<span class="c1"># logging.basicConfig(format=&#39;%(asctime)s %(name)-20s %(levelname)-8s %(message)s&#39;, datefmt=&#39;%d-%b-%y %H:%M:%S&#39;, level=logging.DEBUG)</span>
+<span class="c1"># logger = logging.getLogger()</span>
+<span class="c1"># fh = logging.FileHandler(filename=&#39;logos.log&#39;, mode=&#39;w&#39;)</span>
+<span class="c1"># fh.setLevel(logging.DEBUG)</span>
+<span class="c1"># formatter = logging.Formatter(&#39;%(asctime)s %(name)-20s %(levelname)-8s %(message)s&#39;)</span>
+<span class="c1"># fh.setFormatter(formatter)</span>
+<span class="c1"># logger.addHandler(fh)</span>
+
+<div class="viewcode-block" id="LikelihoodModel"><a class="viewcode-back" href="../../../autoapi/workspace/src/LikelihoodModel/index.html#workspace.src.LikelihoodModel.LikelihoodModel">[docs]</a><span class="k">class</span> <span class="nc">LikelihoodModel</span><span class="p">(</span><span class="n">ExternalModelPluginBase</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    RAVEN ExternalModel of Likelihood Function that can be combine with</span>
+<span class="sd">    MCMC Sampler for Bayesian calibration</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Constructor</span>
+
+<span class="sd">      :returns: None</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+    <span class="n">ExternalModelPluginBase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+<div class="viewcode-block" id="LikelihoodModel.type"><a class="viewcode-back" href="../../../autoapi/workspace/src/LikelihoodModel/index.html#workspace.src.LikelihoodModel.LikelihoodModel.type">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span></div>
+<div class="viewcode-block" id="LikelihoodModel.name"><a class="viewcode-back" href="../../../autoapi/workspace/src/LikelihoodModel/index.html#workspace.src.LikelihoodModel.LikelihoodModel.name">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span></div>
+<div class="viewcode-block" id="LikelihoodModel._model"><a class="viewcode-back" href="../../../autoapi/workspace/src/LikelihoodModel/index.html#workspace.src.LikelihoodModel.LikelihoodModel._model">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="LikelihoodModel._modelType"><a class="viewcode-back" href="../../../autoapi/workspace/src/LikelihoodModel/index.html#workspace.src.LikelihoodModel.LikelihoodModel._modelType">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_modelType</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="LikelihoodModel._modelXMLInput"><a class="viewcode-back" href="../../../autoapi/workspace/src/LikelihoodModel/index.html#workspace.src.LikelihoodModel.LikelihoodModel._modelXMLInput">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_modelXMLInput</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="LikelihoodModel._readMoreXML"><a class="viewcode-back" href="../../../autoapi/workspace/src/LikelihoodModel/index.html#workspace.src.LikelihoodModel.LikelihoodModel._readMoreXML">[docs]</a>  <span class="k">def</span> <span class="nf">_readMoreXML</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">xmlNode</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Method to read the portion of the XML that belongs to this plugin</span>
+
+<span class="sd">      :param container: object, self-like object where all the variables can be stored</span>
+<span class="sd">      :param xmlNode: xml.etree.ElementTree.Element, XML node that needs to be read</span>
+
+<span class="sd">      :returns: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">variables</span> <span class="o">=</span> <span class="n">xmlNode</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;variables&#39;</span><span class="p">)</span>
+    <span class="n">inputVars</span> <span class="o">=</span> <span class="n">xmlNode</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;inputs&#39;</span><span class="p">)</span>
+    <span class="n">outputVars</span> <span class="o">=</span> <span class="n">xmlNode</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;outputs&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">variables</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">inputVars</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">outputVars</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Botht &#39;variables&#39; node and &#39;inputs/outputs&#39; are provided! This is not allowed, please consider just use one of them.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">variables</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span> <span class="k">if</span> <span class="s1">&#39;,&#39;</span> <span class="ow">in</span> <span class="n">variables</span><span class="o">.</span><span class="n">text</span> <span class="k">else</span> <span class="kc">None</span>
+      <span class="n">container</span><span class="o">.</span><span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">variables</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delimiter</span><span class="p">)]</span>
+    <span class="k">elif</span> <span class="n">inputVars</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">outputVars</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span> <span class="k">if</span> <span class="s1">&#39;,&#39;</span> <span class="ow">in</span> <span class="n">inputVars</span><span class="o">.</span><span class="n">text</span> <span class="k">else</span> <span class="kc">None</span>
+      <span class="n">container</span><span class="o">.</span><span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">inputVars</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delimiter</span><span class="p">)]</span>
+      <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span> <span class="k">if</span> <span class="s1">&#39;,&#39;</span> <span class="ow">in</span> <span class="n">outputVars</span><span class="o">.</span><span class="n">text</span> <span class="k">else</span> <span class="kc">None</span>
+      <span class="n">container</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">var</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">outputVars</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delimiter</span><span class="p">)])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_modelXMLInput</span> <span class="o">=</span> <span class="n">xmlNode</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;LikelihoodModel&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_modelType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modelXMLInput</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modelType</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Required attribute &#39;type&#39; for node &#39;</span><span class="si">{}</span><span class="s2">&#39; is not provided!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">LikelihoodModels</span><span class="o">.</span><span class="n">returnInstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_modelType</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LikelihoodModel.initialize"><a class="viewcode-back" href="../../../autoapi/workspace/src/LikelihoodModel/index.html#workspace.src.LikelihoodModel.LikelihoodModel.initialize">[docs]</a>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span><span class="n">runInfoDict</span><span class="p">,</span><span class="n">inputFiles</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Method to initialize this plugin</span>
+
+<span class="sd">      :param container: object, self-like object where all the variables can be stored</span>
+<span class="sd">      :param runInfoDict: dict, dictionary containing all the RunInfo parameters (XML node &lt;RunInfo&gt;)</span>
+<span class="sd">      :param inputFiles: list, list of input files (if any)</span>
+
+<span class="sd">      :returns: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="LikelihoodModel.run"><a class="viewcode-back" href="../../../autoapi/workspace/src/LikelihoodModel/index.html#workspace.src.LikelihoodModel.LikelihoodModel.run">[docs]</a>  <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">inputDict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      This is a simple example of the run method in a plugin.</span>
+
+<span class="sd">      :param container: object, self-like object where all the variables can be stored</span>
+<span class="sd">      :param inputDict: dict, dictionary of inputs from RAVEN</span>
+
+<span class="sd">      :returns: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">handleInput</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_modelXMLInput</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">inputDict</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">outputDict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getOutputs</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">outputDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+      <span class="nb">setattr</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Congjian Wang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

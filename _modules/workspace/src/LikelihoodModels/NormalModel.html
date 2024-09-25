@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>workspace.src.LikelihoodModels.NormalModel &mdash; BayCal 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=af2ce170"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            BayCal
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../support.html">Support</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">More documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributors.html">Contributors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">BayCal</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">workspace.src.LikelihoodModels.NormalModel</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for workspace.src.LikelihoodModels.NormalModel</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2022 Battelle Energy Alliance, LLC</span>
+<span class="c1"># ALL RIGHTS RESERVED</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on July 30 2020</span>
+<span class="sd">@author: Congjian Wang</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">#External Modules------------------------------------------------------------------------------------</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1">#External Modules End--------------------------------------------------------------------------------</span>
+
+<span class="c1">#Internal Modules------------------------------------------------------------------------------------</span>
+<span class="kn">from</span> <span class="nn">ravenframework.utils</span> <span class="kn">import</span> <span class="n">mathUtils</span> <span class="k">as</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">ravenframework.utils</span> <span class="kn">import</span> <span class="n">InputData</span><span class="p">,</span> <span class="n">InputTypes</span>
+<span class="kn">from</span> <span class="nn">.LikelihoodBase</span> <span class="kn">import</span> <span class="n">LikelihoodBase</span>
+<span class="c1">#Internal Modules End--------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="NormalModel"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel">[docs]</a><span class="k">class</span> <span class="nc">NormalModel</span><span class="p">(</span><span class="n">LikelihoodBase</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Normal/Multivariate Normal Likelihood model</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="NormalModel.getInputSpecification"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel.getInputSpecification">[docs]</a>  <span class="k">def</span> <span class="nf">getInputSpecification</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Collects input specifications for this class.</span>
+
+<span class="sd">      returns:</span>
+<span class="sd">        InputData: RAVEN InputData specs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">inputSpecs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">NormalModel</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">getInputSpecification</span><span class="p">()</span>
+    <span class="n">inputSpecs</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">      Normal/Multivariate Normal Likelihood model</span>
+<span class="s2">      &quot;&quot;&quot;</span>
+    <span class="n">inputSpecs</span><span class="o">.</span><span class="n">addSub</span><span class="p">(</span><span class="n">InputData</span><span class="o">.</span><span class="n">parameterInputFactory</span><span class="p">(</span><span class="s1">&#39;simTargets&#39;</span><span class="p">,</span> <span class="n">contentType</span><span class="o">=</span><span class="n">InputTypes</span><span class="o">.</span><span class="n">InterpretedListType</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="s1">&#39;Targets of simulations that are used in calibration&#39;</span><span class="p">))</span>
+    <span class="n">expTargetsInp</span> <span class="o">=</span> <span class="n">InputData</span><span class="o">.</span><span class="n">parameterInputFactory</span><span class="p">(</span><span class="s1">&#39;expTargets&#39;</span><span class="p">,</span> <span class="n">contentType</span><span class="o">=</span><span class="n">InputTypes</span><span class="o">.</span><span class="n">InterpretedListType</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="s1">&#39;Targets of experiments that are used in calibration&#39;</span><span class="p">)</span>
+    <span class="n">expTargetsInp</span><span class="o">.</span><span class="n">addParam</span><span class="p">(</span><span class="s1">&#39;shape&#39;</span><span class="p">,</span> <span class="n">InputTypes</span><span class="o">.</span><span class="n">IntegerListType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;determine the number of targets and the number of experimental observations for each</span>
+<span class="s2">      targets. For example, \xmlAttr</span><span class="si">{shape}</span><span class="s2">=``3,2&#39;&#39; will indicate 2 targets and 3 observations for each</span>
+<span class="s2">      targets. While \xmlAttr</span><span class="si">{shape}</span><span class="s2">=``10&#39;&#39; will indicate one target with 10 observations. Omitting this</span>
+<span class="s2">      optional attribute will result a single target with multiple observations instead.&quot;&quot;&quot;</span> <span class="p">)</span>
+    <span class="n">expTargetsInp</span><span class="o">.</span><span class="n">addParam</span><span class="p">(</span><span class="s1">&#39;computeCov&#39;</span><span class="p">,</span> <span class="n">InputTypes</span><span class="o">.</span><span class="n">BoolType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;Indicate whether the experiment covariance matrix is provided or computed based on given experiment</span>
+<span class="s2">      observations. If True, we will compute the covariance based on given observations, else, the user need to</span>
+<span class="s2">      provide the covariance matrix.&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">expTargetsInp</span><span class="o">.</span><span class="n">addParam</span><span class="p">(</span><span class="s1">&#39;correlation&#39;</span><span class="p">,</span> <span class="n">InputTypes</span><span class="o">.</span><span class="n">BoolType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;Indicate whether the targets are correlated or not. If True, and ``compute&#39;&#39; is True, we will</span>
+<span class="s2">      compute the covariance matrix, elif False and ``compute&#39;&#39; is True, we will only compute the variance of</span>
+<span class="s2">      each target.&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">inputSpecs</span><span class="o">.</span><span class="n">addSub</span><span class="p">(</span><span class="n">expTargetsInp</span><span class="p">)</span>
+    <span class="n">inputSpecs</span><span class="o">.</span><span class="n">addSub</span><span class="p">(</span><span class="n">InputData</span><span class="o">.</span><span class="n">parameterInputFactory</span><span class="p">(</span><span class="s1">&#39;biasTargets&#39;</span><span class="p">,</span> <span class="n">contentType</span><span class="o">=</span><span class="n">InputTypes</span><span class="o">.</span><span class="n">InterpretedListType</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="s1">&#39;Model uncertainty/discrepancy/bias/error in Targets that are used in calibration&#39;</span><span class="p">))</span>
+    <span class="n">expCovInp</span> <span class="o">=</span> <span class="n">InputData</span><span class="o">.</span><span class="n">parameterInputFactory</span><span class="p">(</span><span class="s1">&#39;expCov&#39;</span><span class="p">,</span> <span class="n">contentType</span><span class="o">=</span><span class="n">InputTypes</span><span class="o">.</span><span class="n">InterpretedListType</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="s1">&#39;Experiment covariance, i.e. measurement noise&#39;</span><span class="p">)</span>
+    <span class="n">expCovInp</span><span class="o">.</span><span class="n">addParam</span><span class="p">(</span><span class="s1">&#39;diag&#39;</span><span class="p">,</span> <span class="n">InputTypes</span><span class="o">.</span><span class="n">BoolType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;If True, only variance for each target is required to provide, else, the user need to provide</span>
+<span class="s2">      the full covariance matrix.&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">inputSpecs</span><span class="o">.</span><span class="n">addSub</span><span class="p">(</span><span class="n">expCovInp</span><span class="p">)</span>
+    <span class="n">biasCovInp</span> <span class="o">=</span> <span class="n">InputData</span><span class="o">.</span><span class="n">parameterInputFactory</span><span class="p">(</span><span class="s1">&#39;biasCov&#39;</span><span class="p">,</span> <span class="n">contentType</span><span class="o">=</span><span class="n">InputTypes</span><span class="o">.</span><span class="n">InterpretedListType</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="s1">&#39;Model covariance, model bias/discrepancy or model inadequacy caused by missing physics or numerical approximation&#39;</span><span class="p">)</span>
+    <span class="n">biasCovInp</span><span class="o">.</span><span class="n">addParam</span><span class="p">(</span><span class="s1">&#39;diag&#39;</span><span class="p">,</span> <span class="n">InputTypes</span><span class="o">.</span><span class="n">BoolType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;If True, only variance for each target is required to provide, else, the user need to provide</span>
+<span class="s2">      the full covariance matrix.&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">inputSpecs</span><span class="o">.</span><span class="n">addSub</span><span class="p">(</span><span class="n">biasCovInp</span><span class="p">)</span>
+    <span class="n">romCovInp</span> <span class="o">=</span> <span class="n">InputData</span><span class="o">.</span><span class="n">parameterInputFactory</span><span class="p">(</span><span class="s1">&#39;romCov&#39;</span><span class="p">,</span> <span class="n">contentType</span><span class="o">=</span><span class="n">InputTypes</span><span class="o">.</span><span class="n">InterpretedListType</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="s1">&#39;Metamodel covariance, i.e. model uncertainty caused by surrogate model, such as interpolation&#39;</span><span class="p">)</span>
+    <span class="n">romCovInp</span><span class="o">.</span><span class="n">addParam</span><span class="p">(</span><span class="s1">&#39;diag&#39;</span><span class="p">,</span> <span class="n">InputTypes</span><span class="o">.</span><span class="n">BoolType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;If True, only variance for each target is required to provide, else, the user need to provide</span>
+<span class="s2">      the full covariance matrix.&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">inputSpecs</span><span class="o">.</span><span class="n">addSub</span><span class="p">(</span><span class="n">romCovInp</span><span class="p">)</span>
+    <span class="n">reductionInp</span> <span class="o">=</span> <span class="n">InputData</span><span class="o">.</span><span class="n">parameterInputFactory</span><span class="p">(</span><span class="s1">&#39;reduction&#39;</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;Allows reduction on likelihood model construction&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">reductionInp</span><span class="o">.</span><span class="n">addSub</span><span class="p">(</span><span class="n">InputData</span><span class="o">.</span><span class="n">parameterInputFactory</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">contentType</span><span class="o">=</span><span class="n">InputTypes</span><span class="o">.</span><span class="n">StringType</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="s1">&#39;The method used for reduction, default is &quot;PCA&quot;&#39;</span><span class="p">))</span>
+    <span class="n">reductionInp</span><span class="o">.</span><span class="n">addSub</span><span class="p">(</span><span class="n">InputData</span><span class="o">.</span><span class="n">parameterInputFactory</span><span class="p">(</span><span class="s1">&#39;truncationRank&#39;</span><span class="p">,</span> <span class="n">contentType</span><span class="o">=</span><span class="n">InputTypes</span><span class="o">.</span><span class="n">FloatType</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="s1">&#39;the truncation rank&#39;</span><span class="p">))</span>
+    <span class="n">basisInp</span> <span class="o">=</span> <span class="n">InputData</span><span class="o">.</span><span class="n">parameterInputFactory</span><span class="p">(</span><span class="s1">&#39;basis&#39;</span><span class="p">,</span> <span class="n">contentType</span><span class="o">=</span><span class="n">InputTypes</span><span class="o">.</span><span class="n">FloatListType</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;user provided basis vector for reduction&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">basisInp</span><span class="o">.</span><span class="n">addParam</span><span class="p">(</span><span class="s1">&#39;shape&#39;</span><span class="p">,</span> <span class="n">InputTypes</span><span class="o">.</span><span class="n">IntegerTupleType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+      <span class="n">descr</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;determine the basis vectors for reduction.</span>
+<span class="s2">      For example, \xmlAttr</span><span class="si">{shape}</span><span class="s2">=``10,2&#39;&#39; will indicate 2 basis vectors with dimension 10&quot;&quot;&quot;</span> <span class="p">)</span>
+    <span class="n">reductionInp</span><span class="o">.</span><span class="n">addSub</span><span class="p">(</span><span class="n">basisInp</span><span class="p">)</span>
+
+    <span class="n">inputSpecs</span><span class="o">.</span><span class="n">addSub</span><span class="p">(</span><span class="n">reductionInp</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">inputSpecs</span></div>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Constructor</span>
+
+<span class="sd">      :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">LikelihoodBase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+<div class="viewcode-block" id="NormalModel._simTargets"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._simTargets">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_simTargets</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="NormalModel._expTargets"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._expTargets">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="NormalModel._biasTargets"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._biasTargets">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_biasTargets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span></div>
+<div class="viewcode-block" id="NormalModel._expTargetsShape"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._expTargetsShape">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_expTargetsShape</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="NormalModel._expCov"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._expCov">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_expCov</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="NormalModel._computeExpCov"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._computeExpCov">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_computeExpCov</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># Default to compute the expCov from provided data</span></div>
+<div class="viewcode-block" id="NormalModel._correlatedExpCov"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._correlatedExpCov">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_correlatedExpCov</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># Assume the experimental data are uncorrelated unless the attribute &quot;correlation&quot; is set to True</span></div>
+<div class="viewcode-block" id="NormalModel._biasCov"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._biasCov">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_biasCov</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="NormalModel._romCov"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._romCov">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_romCov</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="NormalModel._cov"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._cov">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_cov</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="NormalModel._detCov"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._detCov">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_detCov</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="NormalModel._diag"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._diag">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_diag</span> <span class="o">=</span> <span class="p">{}</span></div>
+<div class="viewcode-block" id="NormalModel._multipleTargets"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._multipleTargets">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_multipleTargets</span> <span class="o">=</span> <span class="kc">False</span></div>
+<div class="viewcode-block" id="NormalModel._numObservations"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._numObservations">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_numObservations</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="NormalModel._reductionType"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._reductionType">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_reductionType</span> <span class="o">=</span> <span class="s1">&#39;pca&#39;</span></div>
+<div class="viewcode-block" id="NormalModel._truncationRank"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._truncationRank">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_truncationRank</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="NormalModel._subspace"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/NormalModel/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._subspace">[docs]</a>    <span class="bp">self</span><span class="o">.</span><span class="n">_subspace</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="NormalModel._localHandleInput"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._localHandleInput">[docs]</a>  <span class="k">def</span> <span class="nf">_localHandleInput</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">paramInput</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Function to read the portion of the parsed xml input that belongs to this specialized class</span>
+<span class="sd">      and initialize some stuff based on the inputs got.</span>
+
+<span class="sd">      :param paramInput: InputData.ParameterInput, the parsed xml input</span>
+
+<span class="sd">      :returns: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">LikelihoodBase</span><span class="o">.</span><span class="n">_localHandleInput</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">paramInput</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">paramInput</span><span class="o">.</span><span class="n">subparts</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;simtargets&#39;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_simTargets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setVariable</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_variableDict</span><span class="p">[</span><span class="s1">&#39;_simTargets&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simTargets</span>
+      <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;exptargets&#39;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setVariable</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_variableDict</span><span class="p">[</span><span class="s1">&#39;_expTargets&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_expTargetsShape</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">parameterValues</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;shape&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_computeExpCov</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">parameterValues</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;computeCov&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_correlatedExpCov</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">parameterValues</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;correlation&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;biastargets&#39;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_biasTargets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setVariable</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_variableDict</span><span class="p">[</span><span class="s1">&#39;_biasTargets&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_biasTargets</span>
+      <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;expcov&#39;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_expCov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setVariable</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_variableDict</span><span class="p">[</span><span class="s1">&#39;_expCov&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expCov</span>
+        <span class="n">diag</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">parameterValues</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;diag&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_diag</span><span class="p">[</span><span class="s1">&#39;_expCov&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">diag</span>
+      <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;biasCov&#39;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_biasCov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setVariable</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_variableDict</span><span class="p">[</span><span class="s1">&#39;_biasCov&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_biasCov</span>
+        <span class="n">diag</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">parameterValues</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;diag&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_diag</span><span class="p">[</span><span class="s1">&#39;_biasCov&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">diag</span>
+      <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;romcov&#39;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_romCov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setVariable</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_variableDict</span><span class="p">[</span><span class="s1">&#39;_romCov&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_romCov</span>
+        <span class="n">diag</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">parameterValues</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;diag&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_diag</span><span class="p">[</span><span class="s1">&#39;_romCov&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">diag</span>
+      <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;reduction&#39;</span><span class="p">:</span>
+        <span class="n">typeNode</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">findFirst</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">typeNode</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_reductionType</span> <span class="o">=</span> <span class="n">typeNode</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">truncationRankNode</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">findFirst</span><span class="p">(</span><span class="s1">&#39;truncationRank&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">truncationRankNode</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_truncationRank</span> <span class="o">=</span> <span class="n">truncationRankNode</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">basisNode</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">findFirst</span><span class="p">(</span><span class="s1">&#39;basis&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">basisNode</span><span class="p">:</span>
+          <span class="n">shape</span> <span class="o">=</span> <span class="n">basisNode</span><span class="o">.</span><span class="n">parameterValues</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;shape&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+          <span class="k">if</span> <span class="n">shape</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_subspace</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">basisNode</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;shape attribute is required for node &quot;basis&quot;&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simTargets</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;simTargets is required but it can not be found in the input XML file!&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;expTargets is required but it can not be found in the input XML file!&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_computeExpCov</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expCov</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;expCov is required but it can not be found in the input XML file!&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reductionType</span> <span class="o">!=</span> <span class="s1">&#39;pca&#39;</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Reduction type &quot;</span><span class="si">{}</span><span class="s1">&quot; is not valid, please use &quot;pca&quot;!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reductionType</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="NormalModel._checkInputParams"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._checkInputParams">[docs]</a>  <span class="k">def</span> <span class="nf">_checkInputParams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">needDict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Method to check input parameters</span>
+
+<span class="sd">      :param needDict: dict, dictionary of required parameters</span>
+
+<span class="sd">      :returns: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">LikelihoodBase</span><span class="o">.</span><span class="n">_checkInputParams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">needDict</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expTargetsShape</span><span class="p">:</span>
+      <span class="k">try</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expTargetsShape</span><span class="p">)</span>
+      <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The length of provided &quot;expTargets&quot; is not correct!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;The length of provided &quot;expTargets&quot; is not correct!&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_numObservations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_computeExpCov</span><span class="p">:</span>
+      <span class="c1"># if self._expCov:</span>
+        <span class="c1"># print(&#39;&quot;WARNING:&quot; The &quot;expCov&quot; will be computed from the provided data &quot;expTargets&quot;, the user provided &quot;expCov&quot; will not be used.&#39; \</span>
+        <span class="c1">#   + &#39;Try to disable &quot;computeCov&quot; attribute of &quot;expTargets&quot; to use the provided &quot;expCov&quot;!&#39;)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_expCov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expCov</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_expCov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expCov</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_correlatedExpCov</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_expCov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_expCov</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_diag</span><span class="p">[</span><span class="s1">&#39;_expCov&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_expCov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_expCov</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_diag</span><span class="p">[</span><span class="s1">&#39;_expCov&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_simTargets</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+      <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;&quot;simTargets&quot; should have the same size as &quot;expTargets&quot;, but get &quot;</span><span class="si">{}</span><span class="s1">&quot; != &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_biasTargets</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">dim</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_biasTargets</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;&quot;simTargets&quot; should have the same size as &quot;biasTargets&quot;, but get &quot;</span><span class="si">{}</span><span class="s1">&quot; != &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_biasTargets</span><span class="p">)))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_cov</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diag</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">var</span> <span class="o">==</span> <span class="s1">&#39;_expCov&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_computeExpCov</span><span class="p">):</span>
+        <span class="n">dimCov</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">val</span><span class="p">:</span>
+          <span class="k">if</span> <span class="n">dim</span> <span class="o">!=</span> <span class="n">dimCov</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; should have the same size as &quot;simTargets&quot;, but get &quot;</span><span class="si">{}</span><span class="s1">&quot; != &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">dimCov</span><span class="p">,</span> <span class="n">dim</span><span class="p">))</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="k">if</span> <span class="n">dimCov</span> <span class="o">!=</span> <span class="n">dim</span> <span class="o">*</span> <span class="n">dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;The size of &quot;</span><span class="si">{}</span><span class="s1">&quot; should be the square of the size of &quot;simTargets&quot;, but get &quot;</span><span class="si">{}</span><span class="s1">&quot; != &quot;</span><span class="si">{}</span><span class="s1">&quot; * &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">dimCov</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">))</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">))</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cov</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cov</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cov</span> <span class="o">+=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cov</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cov</span><span class="o">.</span><span class="n">T</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Provided covariance matrix is not symmetric!&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cov</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_multipleTargets</span> <span class="o">=</span> <span class="kc">True</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isPosDef</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cov</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Provided covariance matrix is not postive definite!&#39;</span><span class="p">)</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subspace</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_truncationRank</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_subspace</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">computeTruncatedSingularValueDecomposition</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cov</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_truncationRank</span><span class="p">)</span>
+        <span class="c1"># update covariance with reduction, size reduced from N by N to r by r, i.e. Ur.T * Cov * Ur</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subspace</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cov</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subspace</span><span class="p">))</span>
+      <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subspace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># update covariance with reduction, size reduced from N by N to r by r, i.e. Ur.T * Cov * Ur</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subspace</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cov</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subspace</span><span class="p">))</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_detCov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cov</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_detCov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cov</span><span class="p">)</span></div>
+
+  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="NormalModel.isPosDef"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel.isPosDef">[docs]</a>  <span class="k">def</span> <span class="nf">isPosDef</span><span class="p">(</span><span class="n">arrayIn</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Check if provided array is postive definite or not.</span>
+
+<span class="sd">      :param arrayIn: numpy.array, input array</span>
+
+<span class="sd">      returns:</span>
+<span class="sd">        bool: True if the array is postive definite</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">arrayIn</span><span class="p">)</span>
+      <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">:</span>
+      <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="NormalModel.initialize"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel.initialize">[docs]</a>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputDict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Method to initialize this plugin</span>
+
+<span class="sd">      :param inputDict: dict, dictionary of inputs</span>
+<span class="sd">      :returns: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">LikelihoodBase</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputDict</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NormalModel._logLikelihoodFunction"><a class="viewcode-back" href="../../../../autoapi/workspace/src/LikelihoodModels/index.html#workspace.src.LikelihoodModels.NormalModel.NormalModel._logLikelihoodFunction">[docs]</a>  <span class="k">def</span> <span class="nf">_logLikelihoodFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Function to calculate log probability</span>
+
+<span class="sd">      returns:</span>
+<span class="sd">        dict: likelihood output</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">invCov</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">tot</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multipleTargets</span><span class="p">:</span>
+      <span class="n">invCov</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">_cov</span>
+      <span class="n">delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span><span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simTargets</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_biasTargets</span>
+      <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+      <span class="n">tot</span> <span class="o">+=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span> <span class="o">*</span> <span class="n">invCov</span>
+      <span class="n">tot</span> <span class="o">*=</span> <span class="o">-</span><span class="mf">1.0</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">invCov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cov</span><span class="p">)</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subspace</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+          <span class="n">delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simTargets</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_biasTargets</span>
+          <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+          <span class="n">tot</span> <span class="o">+=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">invCov</span><span class="p">,</span> <span class="n">delta</span><span class="p">))</span>
+        <span class="n">tot</span> <span class="o">*=</span> <span class="o">-</span><span class="mf">1.0</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+          <span class="n">delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expTargets</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simTargets</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_biasTargets</span>
+          <span class="c1"># apply subspace</span>
+          <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subspace</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">delta</span><span class="p">))</span>
+          <span class="n">tot</span> <span class="o">+=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">invCov</span><span class="p">,</span> <span class="n">delta</span><span class="p">))</span>
+        <span class="n">tot</span> <span class="o">*=</span> <span class="o">-</span><span class="mf">1.0</span>
+    <span class="c1"># include the 1/sqrt(det(cov)) for all observations</span>
+    <span class="n">tot</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_numObservations</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_detCov</span><span class="p">)</span>
+    <span class="c1"># netLogLikelihood</span>
+    <span class="n">output</span><span class="p">[</span><span class="s1">&#39;likelihood&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">tot</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Congjian Wang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>workspace.src.LikelihoodModels.LikelihoodBase &mdash; BayCal 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js?v=af2ce170"></script>
+        <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+        <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../../_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            BayCal
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../support.html">Support</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">More documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contributors.html">Contributors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">BayCal</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">workspace.src.LikelihoodModels.LikelihoodBase</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/autoapi/workspace/src/LikelihoodModels/LikelihoodBase/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-workspace.src.LikelihoodModels.LikelihoodBase">
+<span id="workspace-src-likelihoodmodels-likelihoodbase"></span><h1>workspace.src.LikelihoodModels.LikelihoodBase<a class="headerlink" href="#module-workspace.src.LikelihoodModels.LikelihoodBase" title="Permalink to this heading">¶</a></h1>
+<p>Created on July 30 2020
+&#64;author: Congjian Wang</p>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#workspace.src.LikelihoodModels.LikelihoodBase.logger" title="workspace.src.LikelihoodModels.LikelihoodBase.logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#workspace.src.LikelihoodModels.LikelihoodBase.fh" title="workspace.src.LikelihoodModels.LikelihoodBase.fh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fh</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#workspace.src.LikelihoodModels.LikelihoodBase.formatter" title="workspace.src.LikelihoodModels.LikelihoodBase.formatter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">formatter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase" title="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LikelihoodBase</span></code></a></p></td>
+<td><p>Base class for Likelihood models</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading">¶</a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.logger">
+<span class="sig-prename descclassname"><span class="pre">workspace.src.LikelihoodModels.LikelihoodBase.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.logger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.fh">
+<span class="sig-prename descclassname"><span class="pre">workspace.src.LikelihoodModels.LikelihoodBase.</span></span><span class="sig-name descname"><span class="pre">fh</span></span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#fh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.fh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.formatter">
+<span class="sig-prename descclassname"><span class="pre">workspace.src.LikelihoodModels.LikelihoodBase.</span></span><span class="sig-name descname"><span class="pre">formatter</span></span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#formatter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.formatter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">workspace.src.LikelihoodModels.LikelihoodBase.</span></span><span class="sig-name descname"><span class="pre">LikelihoodBase</span></span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for Likelihood models</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.getInputSpecification">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getInputSpecification</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase.getInputSpecification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.getInputSpecification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collects input specifications for this class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>InputData: RAVEN InputData specs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase.type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase._variableDict">
+<span class="sig-name descname"><span class="pre">_variableDict</span></span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase._variableDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase._variableDict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase._model">
+<span class="sig-name descname"><span class="pre">_model</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase._model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase._model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase._modelClass">
+<span class="sig-name descname"><span class="pre">_modelClass</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase._modelClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase._modelClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase._outputs">
+<span class="sig-name descname"><span class="pre">_outputs</span></span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase._outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase._outputs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.handleInput">
+<span class="sig-name descname"><span class="pre">handleInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmlNode</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase.handleInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.handleInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to read the portion of the xml input that belongs to this specialized class
+and initialize some stuff based on the inputs got</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>xmlNode</strong> – xml.etree.ElementTree.Element, Xml element node</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase._localHandleInput">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_localHandleInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paramInput</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase._localHandleInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase._localHandleInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to process the parsed xml input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>paramInput</strong> – InputData.ParameterInput, the parsed xml input</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputDict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to initialize</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputDict</strong> – dict, dictionary of inputs</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase._checkInputParams">
+<span class="sig-name descname"><span class="pre">_checkInputParams</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">needDict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase._checkInputParams"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase._checkInputParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to check input parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>needDict</strong> – dict, dictionary of required parameters</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.setVariable">
+<span class="sig-name descname"><span class="pre">setVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase.setVariable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.setVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set value if a float/int/list is provided in the node text, othersise treat the provided value as RAVEN variable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> – str or float or list, the value of given variable</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the recasted value</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str or numpy.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.loadVariables">
+<span class="sig-name descname"><span class="pre">loadVariables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">need</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputDict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase.loadVariables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.loadVariables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the values of variables that is generated by RAVEN</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>need</strong> – dict, the dict of parameters</p></li>
+<li><p><strong>inputDict</strong> – dict, the dict of parameters that is provided from other sources</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the dict of parameters updated with variables</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.getParams">
+<span class="sig-name descname"><span class="pre">getParams</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase.getParams"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.getParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dictionary of variables</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.setParams">
+<span class="sig-name descname"><span class="pre">setParams</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paramDict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase.setParams"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.setParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the parameters from a given dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>paramDict</strong> – dict, settings</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.getOutputs">
+<span class="sig-name descname"><span class="pre">getOutputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase.getOutputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.getOutputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>get calculated cdf value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dictionary of model outputs</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase._logLikelihoodFunction">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_logLikelihoodFunction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase._logLikelihoodFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase._logLikelihoodFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to calculate  log probability</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>return log likelihood outputs</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/workspace/src/LikelihoodModels/LikelihoodBase.html#LikelihoodBase.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to calculate Likelihood related quantities</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Congjian Wang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

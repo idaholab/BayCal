@@ -1,0 +1,69 @@
+workspace.src.LikelihoodModels.Factory
+======================================
+
+.. py:module:: workspace.src.LikelihoodModels.Factory
+
+.. autoapi-nested-parse::
+
+   Created on July 30 2020
+   @author: Congjian Wang
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   workspace.src.LikelihoodModels.Factory.__base
+   workspace.src.LikelihoodModels.Factory.__interfaceDict
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   workspace.src.LikelihoodModels.Factory.knownTypes
+   workspace.src.LikelihoodModels.Factory.returnInstance
+   workspace.src.LikelihoodModels.Factory.returnClass
+
+
+Module Contents
+---------------
+
+.. py:data:: __base
+   :value: 'LikelihoodBase'
+
+
+.. py:data:: __interfaceDict
+
+.. py:function:: knownTypes()
+
+   Returns a list of strings that define the types of instantiable objects for
+   this base factory.
+
+   :returns: the known types
+   :rtype: list
+
+
+.. py:function:: returnInstance(classType)
+
+   Attempts to create and return an instance of a particular type of object
+   available to this factory.
+
+   :param classType: string, string should be one of the knownTypes.
+
+   :returns: subclass object constructed with no arguments
+   :rtype: instance
+
+
+.. py:function:: returnClass(classType)
+
+   Attempts to return a particular class type available to this factory.
+
+   :param classType: string, string should be one of the knownTypes.
+   :returns:
+     returnClass: class, reference to the subclass
+
+

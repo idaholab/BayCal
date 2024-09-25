@@ -1,0 +1,186 @@
+workspace.src.LikelihoodModels
+==============================
+
+.. py:module:: workspace.src.LikelihoodModels
+
+.. autoapi-nested-parse::
+
+   Created on July 30 2020
+   @author: Congjian Wang
+
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/workspace/src/LikelihoodModels/Factory/index
+   /autoapi/workspace/src/LikelihoodModels/LikelihoodBase/index
+   /autoapi/workspace/src/LikelihoodModels/NormalModel/index
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   workspace.src.LikelihoodModels.NormalModel
+
+
+Package Contents
+----------------
+
+.. py:class:: NormalModel
+
+   Bases: :py:obj:`workspace.src.LikelihoodModels.LikelihoodBase.LikelihoodBase`
+
+
+   Normal/Multivariate Normal Likelihood model
+
+
+   .. py:method:: getInputSpecification()
+      :classmethod:
+
+
+      Collects input specifications for this class.
+
+      :returns: RAVEN InputData specs
+      :rtype: InputData
+
+
+
+   .. py:attribute:: _simTargets
+      :value: None
+
+
+
+   .. py:attribute:: _expTargets
+      :value: None
+
+
+
+   .. py:attribute:: _biasTargets
+
+
+   .. py:attribute:: _expTargetsShape
+      :value: None
+
+
+
+   .. py:attribute:: _expCov
+      :value: None
+
+
+
+   .. py:attribute:: _computeExpCov
+      :value: True
+
+
+
+   .. py:attribute:: _correlatedExpCov
+      :value: False
+
+
+
+   .. py:attribute:: _biasCov
+      :value: None
+
+
+
+   .. py:attribute:: _romCov
+      :value: None
+
+
+
+   .. py:attribute:: _cov
+      :value: None
+
+
+
+   .. py:attribute:: _detCov
+      :value: None
+
+
+
+   .. py:attribute:: _diag
+
+
+   .. py:attribute:: _multipleTargets
+      :value: False
+
+
+
+   .. py:attribute:: _numObservations
+      :value: None
+
+
+
+   .. py:attribute:: _reductionType
+      :value: 'pca'
+
+
+
+   .. py:attribute:: _truncationRank
+      :value: None
+
+
+
+   .. py:attribute:: _subspace
+      :value: None
+
+
+
+   .. py:method:: _localHandleInput(paramInput)
+
+      Function to read the portion of the parsed xml input that belongs to this specialized class
+      and initialize some stuff based on the inputs got.
+
+      :param paramInput: InputData.ParameterInput, the parsed xml input
+
+      :returns: None
+
+
+
+   .. py:method:: _checkInputParams(needDict)
+
+      Method to check input parameters
+
+      :param needDict: dict, dictionary of required parameters
+
+      :returns: None
+
+
+
+   .. py:method:: isPosDef(arrayIn)
+      :staticmethod:
+
+
+      Check if provided array is postive definite or not.
+
+      :param arrayIn: numpy.array, input array
+
+      :returns: True if the array is postive definite
+      :rtype: bool
+
+
+
+   .. py:method:: initialize(inputDict)
+
+      Method to initialize this plugin
+
+      :param inputDict: dict, dictionary of inputs
+      :returns: None
+
+
+
+   .. py:method:: _logLikelihoodFunction()
+
+      Function to calculate log probability
+
+      :returns: likelihood output
+      :rtype: dict
+
+
+

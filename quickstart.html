@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Start &mdash; BayCal 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=af2ce170"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+        <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Support" href="support.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            BayCal
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#root-xml-block">Root XML block:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prior-distribution-block">Prior distribution block:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bayesian-inference-via-markov-chain-monte-carlo">Bayesian inference via Markov Chain Monte Carlo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#likelihood-model">Likelihood Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dataobjects-as-internal-data-container">DataObjects as internal data container</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#outstreams-can-be-used-to-save-the-calculations-into-csv-files">OutStreams can be used to save the calculations into CSV files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#steps-to-control-the-calculation-flows">Steps to control the calculation flows:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#runinfo-to-define-the-global-settings-for-the-calculations">RunInfo to define the global settings for the calculations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">More documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributors.html">Contributors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BayCal</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Quick Start</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/quickstart.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="quick-start">
+<span id="quickstart"></span><h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading">¶</a></h1>
+<p>BayCal is a RAVEN plugin, it utilizes RAVEN input structure to design the
+workflow calculation, and contains the following XML blocks.</p>
+<section id="root-xml-block">
+<h2>Root XML block:<a class="headerlink" href="#root-xml-block" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; ?&gt;</span>
+<span class="nt">&lt;Simulation</span><span class="w"> </span><span class="na">verbosity=</span><span class="s">&quot;quiet&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span>...
+<span class="nt">&lt;/Simulation&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="prior-distribution-block">
+<h2>Prior distribution block:<a class="headerlink" href="#prior-distribution-block" title="Permalink to this heading">¶</a></h2>
+<p>Many distributions can be defined through the XML block, such as Beta, Exponential,
+Gamma, Lapace, Logistic, LogNormal, LogUniform, Normal, Triangular, Uniform, Weibull,
+or custom defined distributions. For example:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;Distributions&gt;</span>
+<span class="w">  </span><span class="nt">&lt;Normal</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;normal&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;mean&gt;</span>0<span class="nt">&lt;/mean&gt;</span>
+<span class="w">    </span><span class="nt">&lt;sigma&gt;</span>10<span class="nt">&lt;/sigma&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/Normal&gt;</span>
+<span class="w">  </span><span class="nt">&lt;Normal</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;propDist&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;mean&gt;</span>0<span class="nt">&lt;/mean&gt;</span>
+<span class="w">    </span><span class="nt">&lt;sigma&gt;</span>1<span class="nt">&lt;/sigma&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/Normal&gt;</span>
+<span class="nt">&lt;/Distributions&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="bayesian-inference-via-markov-chain-monte-carlo">
+<h2>Bayesian inference via Markov Chain Monte Carlo<a class="headerlink" href="#bayesian-inference-via-markov-chain-monte-carlo" title="Permalink to this heading">¶</a></h2>
+<p>Both Metropolis method and AdaptiveMetropolis method can be used to perform Bayesian inference.
+The posterior distribution can be computed through these methods.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;Samplers&gt;</span>
+<span class="w">  </span><span class="nt">&lt;Metropolis</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;Metropolis&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;samplerInit&gt;</span>
+<span class="w">      </span><span class="nt">&lt;limit&gt;</span>1000<span class="nt">&lt;/limit&gt;</span>
+<span class="w">      </span><span class="nt">&lt;initialSeed&gt;</span>070419<span class="nt">&lt;/initialSeed&gt;</span>
+<span class="w">      </span><span class="nt">&lt;burnIn&gt;</span>500<span class="nt">&lt;/burnIn&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/samplerInit&gt;</span>
+<span class="w">    </span><span class="nt">&lt;likelihood</span><span class="w"> </span><span class="na">log=</span><span class="s">&quot;True&quot;</span><span class="nt">&gt;</span>likelihood<span class="nt">&lt;/likelihood&gt;</span>
+<span class="w">    </span><span class="nt">&lt;variable</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;alpha&quot;</span><span class="nt">&gt;</span>
+<span class="w">      </span><span class="nt">&lt;distribution&gt;</span>normal<span class="nt">&lt;/distribution&gt;</span>
+<span class="w">      </span><span class="nt">&lt;initial&gt;</span>0<span class="nt">&lt;/initial&gt;</span>
+<span class="w">      </span><span class="nt">&lt;proposal</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;Distributions&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;Normal&quot;</span><span class="nt">&gt;</span>propDist<span class="nt">&lt;/proposal&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/variable&gt;</span>
+<span class="w">    </span><span class="nt">&lt;variable</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;beta&quot;</span><span class="nt">&gt;</span>
+<span class="w">      </span><span class="nt">&lt;distribution&gt;</span>normal<span class="nt">&lt;/distribution&gt;</span>
+<span class="w">      </span><span class="nt">&lt;initial&gt;</span>0<span class="nt">&lt;/initial&gt;</span>
+<span class="w">      </span><span class="nt">&lt;proposal</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;Distributions&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;Normal&quot;</span><span class="nt">&gt;</span>propDist<span class="nt">&lt;/proposal&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/variable&gt;</span>
+<span class="w">    </span><span class="nt">&lt;TargetEvaluation</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;DataObjects&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;PointSet&quot;</span><span class="nt">&gt;</span>outSet<span class="nt">&lt;/TargetEvaluation&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/Metropolis&gt;</span>
+<span class="nt">&lt;/Samplers&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="likelihood-model">
+<h2>Likelihood Model<a class="headerlink" href="#likelihood-model" title="Permalink to this heading">¶</a></h2>
+<p>A BayCal likelihood model can be defined, both simulation output and experimental data
+are integrated into the likelihood model to compute the posterior distribution. For example,
+An ExternalModel “simple” is used to represent the simulation model, while an ExternalModel
+“likelihood” is used to integrate simulation output and experimental data. An EnsembleModel is
+used to couple simulation model with BayCal LikelihoodModel.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;Models&gt;</span>
+<span class="w">  </span><span class="nt">&lt;ExternalModel</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;likelihood&quot;</span><span class="w"> </span><span class="na">subType=</span><span class="s">&quot;BayCal.LikelihoodModel&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;variables&gt;</span>likelihood,<span class="w"> </span>zout<span class="nt">&lt;/variables&gt;</span>
+<span class="w">    </span><span class="nt">&lt;LikelihoodModel</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;normal&quot;</span><span class="nt">&gt;</span>
+<span class="w">      </span><span class="cm">&lt;!-- targets of interest from simulation</span>
+<span class="cm">      Multiple targets can be provided, and they will be stacked together based on</span>
+<span class="cm">      their provided orders.</span>
+<span class="cm">      --&gt;</span>
+<span class="w">      </span><span class="nt">&lt;simTargets&gt;</span>zout<span class="nt">&lt;/simTargets&gt;</span>
+<span class="w">      </span><span class="nt">&lt;expTargets</span><span class="w"> </span><span class="na">shape=</span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="na">computeCov=</span><span class="s">&#39;True&#39;</span><span class="w"> </span><span class="na">correlation=</span><span class="s">&#39;False&#39;</span><span class="nt">&gt;</span>
+<span class="w">        </span>2.11500008,<span class="w">  </span>0.14946724,<span class="w"> </span>-1.65039824,<span class="w">  </span>4.35404944,<span class="w">  </span>2.81822947,
+<span class="w">        </span>6.54820123,<span class="w"> </span>-1.75704173,<span class="w">  </span>2.25129699,<span class="w"> </span>-1.19830637,<span class="w">  </span>3.76461502,
+<span class="w">        </span>0.386274<span class="w">  </span>,<span class="w">  </span>0.3026495<span class="w"> </span>,<span class="w">  </span>1.6467714<span class="w"> </span>,<span class="w"> </span>-0.18838893,<span class="w"> </span>-0.40815504,
+<span class="w">        </span>2.11830326,<span class="w">  </span>2.08114549,<span class="w">  </span>2.4998607<span class="w"> </span>,<span class="w">  </span>2.79584898,<span class="w">  </span>3.88973006,
+<span class="w">      </span>-2.7575892<span class="w"> </span>,<span class="w"> </span>-0.04385282,<span class="w">  </span>0.05381042,<span class="w"> </span>-1.46692956,<span class="w">  </span>1.70190605,
+<span class="w">      </span>-1.57171388,<span class="w">  </span>4.11788556,<span class="w"> </span>-1.63605661,<span class="w">  </span>3.80630774,<span class="w">  </span>2.84303567,
+<span class="w">      </span>-1.38054778,<span class="w"> </span>-1.21978835,<span class="w"> </span>-0.22892141,<span class="w">  </span>4.32828596,<span class="w">  </span>1.43980194,
+<span class="w">        </span>3.2975833<span class="w"> </span>,<span class="w">  </span>2.50307962,<span class="w">  </span>3.99509689,<span class="w"> </span>-0.04558891,<span class="w"> </span>-2.93355096,
+<span class="w">        </span>1.54869592,<span class="w">  </span>0.82694381,<span class="w"> </span>-2.27505536,<span class="w">  </span>2.10192782,<span class="w"> </span>-0.02294763,
+<span class="w">        </span>1.36074938,<span class="w"> </span>-0.69042317,<span class="w">  </span>1.80091876,<span class="w">  </span>0.03907101,<span class="w"> </span>-2.38166576,
+<span class="w">        </span>1.563129<span class="w">  </span>,<span class="w">  </span>1.20795836,<span class="w">  </span>2.29019786,<span class="w">  </span>2.65269473,<span class="w">  </span>0.85751374,
+<span class="w">      </span>-0.59481231,<span class="w">  </span>1.80102222,<span class="w">  </span>0.02886628,<span class="w">  </span>6.45080851,<span class="w">  </span>4.07795272,
+<span class="w">        </span>7.16290259,<span class="w">  </span>1.35855176,<span class="w"> </span>-0.75228632,<span class="w">  </span>1.65880613,<span class="w">  </span>2.4717668<span class="w"> </span>,
+<span class="w">        </span>1.10216817,<span class="w"> </span>-0.44061435,<span class="w"> </span>-1.92342245,<span class="w">  </span>3.05321389,<span class="w">  </span>0.89013387,
+<span class="w">      </span>-1.05614164,<span class="w">  </span>0.33685368,<span class="w">  </span>1.65889606,<span class="w"> </span>-0.49594808,<span class="w">  </span>6.63155206,
+<span class="w">        </span>3.70915947,<span class="w"> </span>-0.46757349,<span class="w">  </span>0.75459259,<span class="w"> </span>-0.87910652,<span class="w">  </span>2.84513982,
+<span class="w">      </span>-2.27714018,<span class="w">  </span>2.16478883,<span class="w"> </span>-0.31847088,<span class="w">  </span>5.61444774,<span class="w"> </span>-1.28556545,
+<span class="w">        </span>2.6697912<span class="w"> </span>,<span class="w">  </span>0.84654927,<span class="w">  </span>8.2436798<span class="w"> </span>,<span class="w">  </span>1.80816732,<span class="w">  </span>3.72230814,
+<span class="w">        </span>3.36955247,<span class="w">  </span>0.72882023,<span class="w"> </span>-3.85778293,<span class="w"> </span>-1.2840472<span class="w"> </span>,<span class="w">  </span>1.65360275,
+<span class="w">      </span>-0.48916641,<span class="w">  </span>2.25437166,<span class="w">  </span>1.28519366,<span class="w"> </span>-3.07200649,<span class="w">  </span>1.02090558
+<span class="w">      </span><span class="nt">&lt;/expTargets&gt;</span>
+<span class="w">      </span><span class="nt">&lt;reduction&gt;</span>
+<span class="w">        </span><span class="nt">&lt;type&gt;</span>pca<span class="nt">&lt;/type&gt;</span>
+<span class="w">        </span><span class="cm">&lt;!-- -1: no truncation</span>
+<span class="cm">            0: optimal rank is computed</span>
+<span class="cm">            &gt;1: user-defined truncation rank</span>
+<span class="cm">            &gt;0 and &lt; 1: computed rank is the number of the biggest single value needed</span>
+<span class="cm">            to reach the energy identified by truncationRank--&gt;</span>
+<span class="w">        </span><span class="nt">&lt;truncationRank&gt;</span>0<span class="nt">&lt;/truncationRank&gt;</span>
+<span class="w">      </span><span class="nt">&lt;/reduction&gt;</span>
+<span class="w">      </span><span class="cm">&lt;!--</span>
+<span class="cm">      &lt;expCov diag=&quot;False&quot;&gt;&lt;/expCov&gt;</span>
+<span class="cm">      &lt;biasTargets&gt;&lt;/biasTargets&gt;</span>
+<span class="cm">      &lt;biasCov diag=&quot;False&quot;&gt;&lt;/biasCov&gt;</span>
+<span class="cm">      &lt;romCov diag=&quot;False&quot;&gt;&lt;/romCov&gt;</span>
+<span class="cm">      --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/LikelihoodModel&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/ExternalModel&gt;</span>
+<span class="w">  </span><span class="cm">&lt;!-- External Model --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;ExternalModel</span><span class="w"> </span><span class="na">ModuleToLoad=</span><span class="s">&quot;simple&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;simple&quot;</span><span class="w"> </span><span class="na">subType=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;variables&gt;</span>alpha,<span class="w"> </span>beta,<span class="w"> </span>zout<span class="nt">&lt;/variables&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/ExternalModel&gt;</span>
+<span class="w">  </span><span class="cm">&lt;!-- EnsembleModel --&gt;</span>
+<span class="w">  </span><span class="nt">&lt;EnsembleModel</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;EnsembleLH&quot;</span><span class="w"> </span><span class="na">subType=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Model</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;Models&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;ExternalModel&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span>simple
+<span class="w">      </span><span class="nt">&lt;Input</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;DataObjects&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;PointSet&quot;</span><span class="nt">&gt;</span>inputHolderSimple<span class="nt">&lt;/Input&gt;</span>
+<span class="w">      </span><span class="nt">&lt;TargetEvaluation</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;DataObjects&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;PointSet&quot;</span><span class="nt">&gt;</span>simData<span class="nt">&lt;/TargetEvaluation&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/Model&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Model</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;Models&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;ExternalModel&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span>likelihood
+<span class="w">      </span><span class="nt">&lt;Input</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;DataObjects&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;PointSet&quot;</span><span class="nt">&gt;</span>inputHolderLikelihood<span class="nt">&lt;/Input&gt;</span>
+<span class="w">      </span><span class="nt">&lt;TargetEvaluation</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;DataObjects&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;PointSet&quot;</span><span class="nt">&gt;</span>lhData<span class="nt">&lt;/TargetEvaluation&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/Model&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/EnsembleModel&gt;</span>
+<span class="nt">&lt;/Models&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="dataobjects-as-internal-data-container">
+<h2>DataObjects as internal data container<a class="headerlink" href="#dataobjects-as-internal-data-container" title="Permalink to this heading">¶</a></h2>
+<p>DataObjects are required to store the inputs/outputs.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;DataObjects&gt;</span>
+<span class="w">  </span><span class="nt">&lt;PointSet</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;inputHolderLikelihood&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Input&gt;</span>zout<span class="nt">&lt;/Input&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Output&gt;</span>OutputPlaceHolder<span class="nt">&lt;/Output&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/PointSet&gt;</span>
+<span class="w">  </span><span class="nt">&lt;PointSet</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;inputHolder&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Input&gt;</span>alpha,<span class="w"> </span>beta,<span class="w"> </span>zout<span class="nt">&lt;/Input&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Output&gt;</span>OutputPlaceHolder<span class="nt">&lt;/Output&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/PointSet&gt;</span>
+<span class="w">  </span><span class="nt">&lt;PointSet</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;inputHolderSimple&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Input&gt;</span>alpha,<span class="w"> </span>beta<span class="nt">&lt;/Input&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Output&gt;</span>OutputPlaceHolder<span class="nt">&lt;/Output&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/PointSet&gt;</span>
+<span class="w">  </span><span class="nt">&lt;PointSet</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;outSet&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Input&gt;</span>alpha,<span class="w"> </span>beta<span class="nt">&lt;/Input&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Output&gt;</span>zout,<span class="w"> </span>likelihood<span class="nt">&lt;/Output&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/PointSet&gt;</span>
+<span class="w">  </span><span class="nt">&lt;PointSet</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;out_export&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Input&gt;</span>traceID<span class="nt">&lt;/Input&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Output&gt;</span>alpha,<span class="w"> </span>beta<span class="nt">&lt;/Output&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/PointSet&gt;</span>
+<span class="w">  </span><span class="nt">&lt;PointSet</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;simData&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="cm">&lt;!-- calibrated parameters --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Input&gt;</span>alpha,<span class="w"> </span>beta<span class="nt">&lt;/Input&gt;</span>
+<span class="w">    </span><span class="cm">&lt;!-- simulation targets that will be passed to likelihood model --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Output&gt;</span>zout<span class="nt">&lt;/Output&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/PointSet&gt;</span>
+<span class="w">  </span><span class="nt">&lt;PointSet</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;lhData&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="cm">&lt;!-- simulation targets --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Input&gt;</span>zout<span class="nt">&lt;/Input&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Output&gt;</span>likelihood<span class="nt">&lt;/Output&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/PointSet&gt;</span>
+<span class="nt">&lt;/DataObjects&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="outstreams-can-be-used-to-save-the-calculations-into-csv-files">
+<h2>OutStreams can be used to save the calculations into CSV files<a class="headerlink" href="#outstreams-can-be-used-to-save-the-calculations-into-csv-files" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;OutStreams&gt;</span>
+<span class="w">  </span><span class="nt">&lt;Print</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;dumpOut&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>csv<span class="nt">&lt;/type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;source&gt;</span>outSet<span class="nt">&lt;/source&gt;</span>
+<span class="w">    </span><span class="nt">&lt;what&gt;</span>input,<span class="w"> </span>output<span class="nt">&lt;/what&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/Print&gt;</span>
+<span class="w">  </span><span class="nt">&lt;Print</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;dumpExport&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;type&gt;</span>csv<span class="nt">&lt;/type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;source&gt;</span>out_export<span class="nt">&lt;/source&gt;</span>
+<span class="w">    </span><span class="nt">&lt;what&gt;</span>input,<span class="w"> </span>output<span class="nt">&lt;/what&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/Print&gt;</span>
+<span class="nt">&lt;/OutStreams&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="steps-to-control-the-calculation-flows">
+<h2>Steps to control the calculation flows:<a class="headerlink" href="#steps-to-control-the-calculation-flows" title="Permalink to this heading">¶</a></h2>
+<p>MultiRun is used to perform the Metropolis/AdaptiveMetropolis sampling.
+IOStep is used to manage the inputs/outputs streams.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;Steps&gt;</span>
+<span class="w">  </span><span class="nt">&lt;MultiRun</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;BayesianInference&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Input</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;DataObjects&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;PointSet&quot;</span><span class="nt">&gt;</span>inputHolderLikelihood<span class="nt">&lt;/Input&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Input</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;DataObjects&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;PointSet&quot;</span><span class="nt">&gt;</span>inputHolderSimple<span class="nt">&lt;/Input&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Model</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;Models&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;EnsembleModel&quot;</span><span class="nt">&gt;</span>EnsembleLH<span class="nt">&lt;/Model&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Sampler</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;Samplers&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;Metropolis&quot;</span><span class="nt">&gt;</span>Metropolis<span class="nt">&lt;/Sampler&gt;</span>
+<span class="w">    </span><span class="nt">&lt;SolutionExport</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;DataObjects&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;PointSet&quot;</span><span class="nt">&gt;</span>out_export<span class="nt">&lt;/SolutionExport&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Output</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;DataObjects&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;PointSet&quot;</span><span class="nt">&gt;</span>simData<span class="nt">&lt;/Output&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Output</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;DataObjects&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;PointSet&quot;</span><span class="nt">&gt;</span>lhData<span class="nt">&lt;/Output&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Output</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;DataObjects&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;PointSet&quot;</span><span class="nt">&gt;</span>outSet<span class="nt">&lt;/Output&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/MultiRun&gt;</span>
+<span class="w">  </span><span class="nt">&lt;IOStep</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;print&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Input</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;DataObjects&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;PointSet&quot;</span><span class="nt">&gt;</span>out_export<span class="nt">&lt;/Input&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Input</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;DataObjects&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;PointSet&quot;</span><span class="nt">&gt;</span>outSet<span class="nt">&lt;/Input&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Output</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;OutStreams&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;Print&quot;</span><span class="nt">&gt;</span>dumpExport<span class="nt">&lt;/Output&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Output</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;OutStreams&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;Print&quot;</span><span class="nt">&gt;</span>dumpOut<span class="nt">&lt;/Output&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/IOStep&gt;</span>
+<span class="nt">&lt;/Steps&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="runinfo-to-define-the-global-settings-for-the-calculations">
+<h2>RunInfo to define the global settings for the calculations<a class="headerlink" href="#runinfo-to-define-the-global-settings-for-the-calculations" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;RunInfo&gt;</span>
+<span class="w">  </span><span class="nt">&lt;WorkingDir&gt;</span>external<span class="nt">&lt;/WorkingDir&gt;</span>
+<span class="w">  </span><span class="nt">&lt;Sequence&gt;</span>BayesianInference,<span class="w"> </span>print<span class="nt">&lt;/Sequence&gt;</span>
+<span class="w">  </span><span class="nt">&lt;batchSize&gt;</span>1<span class="nt">&lt;/batchSize&gt;</span>
+<span class="w">  </span><span class="nt">&lt;internalParallel&gt;</span>False<span class="nt">&lt;/internalParallel&gt;</span>
+<span class="nt">&lt;/RunInfo&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="support.html" class="btn btn-neutral float-right" title="Support" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Congjian Wang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

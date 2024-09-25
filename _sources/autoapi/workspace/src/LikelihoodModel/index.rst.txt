@@ -1,0 +1,87 @@
+workspace.src.LikelihoodModel
+=============================
+
+.. py:module:: workspace.src.LikelihoodModel
+
+.. autoapi-nested-parse::
+
+   Author:  Congjian Wang
+   Date  :  07/16/2020
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   workspace.src.LikelihoodModel.LikelihoodModel
+
+
+Module Contents
+---------------
+
+.. py:class:: LikelihoodModel
+
+   Bases: :py:obj:`ravenframework.PluginBaseClasses.ExternalModelPluginBase.ExternalModelPluginBase`
+
+
+   RAVEN ExternalModel of Likelihood Function that can be combine with
+   MCMC Sampler for Bayesian calibration
+
+
+   .. py:attribute:: type
+
+
+   .. py:attribute:: name
+
+
+   .. py:attribute:: _model
+      :value: None
+
+
+
+   .. py:attribute:: _modelType
+      :value: None
+
+
+
+   .. py:attribute:: _modelXMLInput
+      :value: None
+
+
+
+   .. py:method:: _readMoreXML(container, xmlNode)
+
+      Method to read the portion of the XML that belongs to this plugin
+
+      :param container: object, self-like object where all the variables can be stored
+      :param xmlNode: xml.etree.ElementTree.Element, XML node that needs to be read
+
+      :returns: None
+
+
+
+   .. py:method:: initialize(container, runInfoDict, inputFiles)
+
+      Method to initialize this plugin
+
+      :param container: object, self-like object where all the variables can be stored
+      :param runInfoDict: dict, dictionary containing all the RunInfo parameters (XML node <RunInfo>)
+      :param inputFiles: list, list of input files (if any)
+
+      :returns: None
+
+
+
+   .. py:method:: run(container, inputDict)
+
+      This is a simple example of the run method in a plugin.
+
+      :param container: object, self-like object where all the variables can be stored
+      :param inputDict: dict, dictionary of inputs from RAVEN
+
+      :returns: None
+
+
+
