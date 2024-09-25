@@ -19,8 +19,6 @@ jobs:
         uses: actions/checkout@v3
       - run: pwd
       - run: cd .. && rm -Rf raven && git clone https://github.com/idaholab/raven.git
-      # using branch for now
-      - run: cd ../raven && git checkout -b wangc/update_libs remotes/origin/wangc/update_libs
       - run: python3 ../raven/scripts/install_plugins.py -s ${{ github.workspace }}
       - run: WD=`(cd ../../.. && pwd)` && export RAVEN_LIBS_NAME="raven_libs_"`basename $WD` && ../raven/scripts/establish_conda_env.sh --install
       - run: cd ../raven && ./build_raven
